@@ -1,6 +1,6 @@
 {
     "name": "ksenonda/amocrm2.0",
-    "description": "Удобный и быстрый клиент для работы с API amoCRM",
+    "description": "Клиент для работы с API amoCRM",
     "license": "MIT",
     "keywords": ["amocrm", "crm", "api"],
     "authors": [
