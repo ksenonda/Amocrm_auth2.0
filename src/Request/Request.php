@@ -250,7 +250,7 @@ class Request
     {
         $result = json_decode($response, true);
 
-        if (floor($info['http_code'] / 100) >= 3) {
+       /* if (floor($info['http_code'] / 100) >= 3) {
             if (isset($result['response']['error_code']) && $result['response']['error_code'] > 0) {
                 $code = $result['response']['error_code'];
             } elseif ($result !== null) {
@@ -258,7 +258,7 @@ class Request
             } else {
                 $code = $info['http_code'];
             }
-            if ($this->v1 === false && isset($result['response']['error'])) {
+            if (isset($result['response']['error'])) {
                 throw new Exception($result['response']['error'], $code);
             } elseif (isset($result['response'])) {
                 throw new Exception(json_encode($result['response']));
@@ -268,8 +268,8 @@ class Request
         } elseif (!isset($result['response'])) {
             return false;
         }
-
-        return $result['response'];
+        */
+        return $result;//['response']
     }
 
     /**
