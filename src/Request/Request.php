@@ -22,11 +22,6 @@ use AmoCRM\NetworkException;
 class Request
 {
     /**
-     * @var bool Использовать устаревшую схему авторизации
-     */
-    protected $v1 = false;
-
-    /**
      * @var bool Флаг вывода отладочной информации
      */
     private $debug = false;
@@ -151,9 +146,10 @@ class Request
      */
     protected function prepareHeaders($modified = null)
     {
+        $token = $this->parameters->getAuth('token');
         $headers = [
-            'Connection: keep-alive',
-            'Content-Type: application/json',
+        'Content-Type:application/json',
+        'Authorization: Bearer ' . $token,
         ];
 
         if ($modified !== null) {
@@ -175,19 +171,10 @@ class Request
      */
     protected function prepareEndpoint($url)
     {
-        if ($this->v1 === false) {
-            $query = http_build_query(array_merge($this->parameters->getGet(), [
-                'USER_LOGIN' => $this->parameters->getAuth('login'),
-                'USER_HASH' => $this->parameters->getAuth('apikey'),
-            ]), null, '&');
-        } else {
-            $query = http_build_query(array_merge($this->parameters->getGet(), [
-                'login' => $this->parameters->getAuth('login'),
-                'api_key' => $this->parameters->getAuth('apikey'),
-            ]), null, '&');
-        }
+        
+        $query = http_build_query($this->parameters->getGet(), null, '&');
 
-        return sprintf('https://%s%s?%s', $this->parameters->getAuth('domain'), $url, $query);
+        return sprintf($this->parameters->getAuth('domain'), $url, $query);
     }
 
     /**
