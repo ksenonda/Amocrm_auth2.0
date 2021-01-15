@@ -147,50 +147,76 @@ class AmoAuth extends AbstractProvider
     {
         return $this->urlAccount() . 'v3/user';
     }
+    public function saveToken($accessToken, $token_file)
+    {
+        if (
+            isset($accessToken)
+            && isset($accessToken['accessToken'])
+            && isset($accessToken['refreshToken'])
+            && isset($accessToken['expires'])
+            && isset($accessToken['baseDomain'])
+        ) {
+            $data = [
+                'accessToken' => $accessToken['accessToken'],
+                'expires' => $accessToken['expires'],
+                'refreshToken' => $accessToken['refreshToken'],
+                'baseDomain' => $accessToken['baseDomain'],
+            ];
 
-public function saveToken($accessToken, $token_file)
-{
-    if (
-        isset($accessToken)
-        && isset($accessToken['accessToken'])
-        && isset($accessToken['refreshToken'])
-        && isset($accessToken['expires'])
-        && isset($accessToken['baseDomain'])
-    ) {
-        $data = [
-            'accessToken' => $accessToken['accessToken'],
-            'expires' => $accessToken['expires'],
-            'refreshToken' => $accessToken['refreshToken'],
-            'baseDomain' => $accessToken['baseDomain'],
-        ];
+            file_put_contents($token_file, json_encode($data));
+        } else {
+            exit('Invalid access token ' . var_export($accessToken, true));
+        }
+    }
 
-        file_put_contents($token_file, json_encode($data));
-    } else {
-        exit('Invalid access token ' . var_export($accessToken, true));
+    public function getToken($token_file)
+    {
+        $accessToken = json_decode(file_get_contents($token_file), true);
+
+        if (
+            isset($accessToken)
+            && isset($accessToken['accessToken'])
+            && isset($accessToken['refreshToken'])
+            && isset($accessToken['expires'])
+            && isset($accessToken['baseDomain'])
+        ) {
+            return new \League\OAuth2\Client\Token\AccessToken([
+                'access_token' => $accessToken['accessToken'],
+                'refresh_token' => $accessToken['refreshToken'],
+                'expires' => $accessToken['expires'],
+                'baseDomain' => $accessToken['baseDomain'],
+            ]);
+        } else {
+            exit('Invalid access token ' . var_export($accessToken, true));
+        }
+    }
+
+    public function checkToken($token_file)
+    {
+        $accessToken = $this->getToken($token_file);
+    
+        $this->setBaseDomain($accessToken->getValues()['baseDomain']);
+        if ($accessToken->hasExpired()) 
+        {
+            try 
+            {
+                $accessToken = $this->getAccessToken(new League\OAuth2\Client\Grant\RefreshToken(), [
+                'refresh_token' => $accessToken->getRefreshToken(),
+                ]);
+                $this->saveToken([
+                'accessToken' => $accessToken->getToken(),
+                'refreshToken' => $accessToken->getRefreshToken(),
+                'expires' => $accessToken->getExpires(),
+                'baseDomain' => $this->getBaseDomain(),
+                ], $token_file);
+
+            } catch (Exception $e) 
+            {
+                die((string)$e);
+            }
+        }
+
+       return $token = $accessToken->getToken();
     }
 }
 
-/**
- * @return \League\OAuth2\Client\Token\AccessToken
- */
-public function pullToken($token_file)
-{
-    $accessToken = json_decode(file_get_contents($token_file), true);
-
-    if (
-        isset($accessToken)
-        && isset($accessToken['accessToken'])
-        && isset($accessToken['refreshToken'])
-        && isset($accessToken['expires'])
-        && isset($accessToken['baseDomain'])
-    ) {
-        return new \League\OAuth2\Client\Token\AccessToken([
-            'access_token' => $accessToken['accessToken'],
-            'refresh_token' => $accessToken['refreshToken'],
-            'expires' => $accessToken['expires'],
-            'baseDomain' => $accessToken['baseDomain'],
-        ]);
-    } else {
-        exit('Invalid access token ' . var_export($accessToken, true));
-    }
-}
