@@ -1,17 +1,17 @@
 <?php
 
-namespace AmoCRM\Request;
+namespace AmoCRM2\Request;
 
 use DateTime;
-use AmoCRM\Exception;
-use AmoCRM\NetworkException;
+use AmoCRM2\Exception;
+use AmoCRM2\NetworkException;
 
 /**
  * Class Request
  *
  * Класс отправляющий запросы к API amoCRM используя cURL
  *
- * @package AmoCRM\Request
+ * @package AmoCRM2\Request
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
