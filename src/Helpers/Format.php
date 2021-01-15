@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Helpers;
+namespace AmoCRM2\Helpers;
 
 /**
  * Class Format
  *
  * Хелпер для изменения формата данных
  *
- * @package AmoCRM\Helpers
+ * @package AmoCRM2\Helpers
  * @author denostr <4deni.kiev@gmail.com>
  * @link https://github.com/dotzero/amocrm-php
  *
