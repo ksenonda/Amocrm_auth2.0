@@ -7,7 +7,7 @@ namespace AmoCRM2;
  *
  * Исключение выбрасываемое при обращении к несуществующим моделям amoCRM API
  *
- * @package AmoCRM
+ * @package AmoCRM2
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
