@@ -1,16 +1,16 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
-use AmoCRM\Models\Traits\SetDateCreate;
-use AmoCRM\Models\Traits\SetLastModified;
+use AmoCRM2\Models\Traits\SetDateCreate;
+use AmoCRM2\Models\Traits\SetLastModified;
 
 /**
  * Class Task
  *
  * Класс модель для работы с Задачами
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
