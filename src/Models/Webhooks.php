@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
 /**
  * Class Webhooks
  *
  * Класс модель для работы с Webhooks
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
