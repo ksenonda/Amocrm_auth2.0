@@ -1,12 +1,12 @@
 <?php
 
-namespace AmoCRM;
+namespace AmoCRM2;
 
-use AmoCRM\Models\ModelInterface;
-use AmoCRM\Request\CurlHandle;
-use AmoCRM\Request\ParamsBag;
-use AmoCRM\Helpers\Fields;
-use AmoCRM\Helpers\Format;
+use AmoCRM2\Models\ModelInterface;
+use AmoCRM2\Request\CurlHandle;
+use AmoCRM2\Request\ParamsBag;
+use AmoCRM2\Helpers\Fields;
+use AmoCRM2\Helpers\Format;
 
 /**
  * Class Client
@@ -17,24 +17,23 @@ use AmoCRM\Helpers\Format;
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
- * @property \AmoCRM\Models\Account $account
- * @property \AmoCRM\Models\Call $call
- * @property \AmoCRM\Models\Catalog $catalog
- * @property \AmoCRM\Models\CatalogElement $catalog_element
- * @property \AmoCRM\Models\Company $company
- * @property \AmoCRM\Models\Contact $contact
- * @property \AmoCRM\Models\Customer $customer
- * @property \AmoCRM\Models\CustomersPeriods $customers_periods
- * @property \AmoCRM\Models\CustomField $custom_field
- * @property \AmoCRM\Models\Lead $lead
- * @property \AmoCRM\Models\Links $links
- * @property \AmoCRM\Models\Note $note
- * @property \AmoCRM\Models\Pipelines $pipelines
- * @property \AmoCRM\Models\Task $task
- * @property \AmoCRM\Models\Transaction $transaction
- * @property \AmoCRM\Models\Unsorted $unsorted
- * @property \AmoCRM\Models\Webhooks $webhooks
- * @property \AmoCRM\Models\Widgets $widgets
+ * @property \AmoCRM2\Models\Account $account +
+ * @property \AmoCRM2\Models\Catalog $catalog
+ * @property \AmoCRM2\Models\CatalogElement $catalog_element
+ * @property \AmoCRM2\Models\Company $company
+ * @property \AmoCRM2\Models\Contact $contact
+ * @property \AmoCRM2\Models\Customer $customer
+ * @property \AmoCRM2\Models\CustomersPeriods $customers_periods
+ * @property \AmoCRM2\Models\CustomField $custom_field
+ * @property \AmoCRM2\Models\Lead $lead
+ * @property \AmoCRM2\Models\Links $links
+ * @property \AmoCRM2\Models\Note $note
+ * @property \AmoCRM2\Models\Pipelines $pipelines
+ * @property \AmoCRM2\Models\Task $task
+ * @property \AmoCRM2\Models\Transaction $transaction
+ * @property \AmoCRM2\Models\Unsorted $unsorted
+ * @property \AmoCRM2\Models\Webhooks $webhooks
+ * @property \AmoCRM2\Models\Widgets $widgets
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -64,17 +63,12 @@ class Client
      * @param string $apikey Ключ пользователя amoCRM
      * @param string|null $proxy Прокси сервер для отправки запроса
      */
-    public function __construct($domain, $login, $apikey, $proxy = null)
+    public function __construct($domain, $token, $proxy = null)
     {
-        // Разернуть поддомен в полный домен
-        if (strpos($domain, '.') === false) {
-            $domain = sprintf('%s.amocrm.ru', $domain);
-        }
 
         $this->parameters = new ParamsBag();
         $this->parameters->addAuth('domain', $domain);
-        $this->parameters->addAuth('login', $login);
-        $this->parameters->addAuth('apikey', $apikey);
+        $this->parameters->addAuth('token', $login);
 
         if ($proxy !== null) {
             $this->parameters->addProxy($proxy);
