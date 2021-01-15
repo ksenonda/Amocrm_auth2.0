@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
 /**
  * Class Account
  *
  * Класс модель для работы с Аккаунтом
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
@@ -37,32 +37,7 @@ class Account extends AbstractModel
         return $short ? $this->getShorted($result['account']) : $result['account'];
     }
 
-    /**
-     * Возвращает сведения о пользователе по его логину.
-     * Если не указывать логин, вернутся сведения о владельце API ключа.
-     *
-     * @param null|string $login Логин пользователя
-     * @return mixed Данные о пользователе
-     */
-    public function getUserByLogin($login = null)
-    {
-        if ($login === null) {
-            $login = $this->getParameters()->getAuth('login');
-        }
-
-        $login = strtolower($login);
-        $result = $this->apiCurrent();
-
-        foreach ($result['users'] as $user) {
-            if (strtolower($user['login']) == $login) {
-                return $user;
-            }
-        }
-
-        return false;
-    }
-
-    /**
+        /**
      * Урезание значения возвращаемого методом apiCurrent,
      * оставляет только основные поля такие как 'id', 'name', 'type_id', 'enums'
      *
