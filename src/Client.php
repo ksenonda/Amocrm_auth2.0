@@ -68,7 +68,7 @@ class Client
 
         $this->parameters = new ParamsBag();
         $this->parameters->addAuth('domain', $domain);
-        $this->parameters->addAuth('token', $login);
+        $this->parameters->addAuth('token', $token);
 
         if ($proxy !== null) {
             $this->parameters->addProxy($proxy);
@@ -88,7 +88,7 @@ class Client
      */
     public function __get($name)
     {
-        $classname = '\\AmoCRM\\Models\\' . Format::camelCase($name);
+        $classname = '\\AmoCRM2\\Models\\' . Format::camelCase($name);
 
         if (!class_exists($classname)) {
             throw new ModelException('Model not exists: ' . $name);
