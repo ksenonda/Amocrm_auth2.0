@@ -1,8 +1,8 @@
 <?php
 
-namespace AmoCRM\Webhooks;
+namespace AmoCRM2\Webhooks;
 
-use AmoCRM\Exception;
+use AmoCRM2\Exception;
 
 /**
  * Class Listener
@@ -13,7 +13,7 @@ use AmoCRM\Exception;
  * произошедших в amoCRM. Вы можете настроить HTTP адреса ваших приложений и связанные с ними
  * рабочие правила в настройках своего аккаунта, в разделе «API».
  *
- * @package AmoCRM\Webhooks
+ * @package AmoCRM2\Webhooks
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
