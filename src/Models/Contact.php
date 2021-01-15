@@ -1,19 +1,19 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
-use AmoCRM\Models\Traits\SetNote;
-use AmoCRM\Models\Traits\SetTags;
-use AmoCRM\Models\Traits\SetDateCreate;
-use AmoCRM\Models\Traits\SetLastModified;
-use AmoCRM\Models\Traits\SetLinkedLeadsId;
+use AmoCRM2\Models\Traits\SetNote;
+use AmoCRM2\Models\Traits\SetTags;
+use AmoCRM2\Models\Traits\SetDateCreate;
+use AmoCRM2\Models\Traits\SetLastModified;
+use AmoCRM2\Models\Traits\SetLinkedLeadsId;
 
 /**
  * Class Contact
  *
  * Класс модель для работы с Контактами
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
