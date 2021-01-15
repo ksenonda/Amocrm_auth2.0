@@ -1,6 +1,6 @@
 <?php
 
-namespace AmoCRM\Request;
+namespace AmoCRM2\Request;
 
 use AmoCRM\NetworkException;
 
@@ -9,7 +9,7 @@ use AmoCRM\NetworkException;
  *
  * Класс, хранящий повторно используемый обработчик cURL
  *
- * @package AmoCRM\Request
+ * @package AmoCRM2\Request
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
