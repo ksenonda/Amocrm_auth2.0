@@ -1,5 +1,5 @@
 {
-    "name": "dotzero/amocrm",
+    "name": "dotzero/amocrm2.0",
     "description": "Удобный и быстрый клиент для работы с API amoCRM",
     "license": "MIT",
     "keywords": ["amocrm", "crm", "api"],
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AmoCRM\\": "src"
+            "AmoCRM2\\": "src"
         }
     },
     "autoload-dev": {
