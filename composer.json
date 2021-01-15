@@ -1,12 +1,12 @@
 {
-    "name": "dotzero/amocrm2.0",
+    "name": "ksenonda/amocrm2.0",
     "description": "Удобный и быстрый клиент для работы с API amoCRM",
     "license": "MIT",
     "keywords": ["amocrm", "crm", "api"],
     "authors": [
         {
-            "name": "dotzero",
-            "email": "mail@dotzero.ru"
+            "name": "ksenonda",
+            "email": "ksenonda@rambler.ru"
         }
     ],
     "require": {
