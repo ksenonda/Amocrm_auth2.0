@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
 /**
  * Class Catalog
  *
  * Класс модель для работы с Каталогами
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author mb@baso-it.ru
  * @author dotzero <mail@dotzero.ru>
  * @link https://github.com/dotzero/amocrm-php
