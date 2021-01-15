@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
 /**
  * Class CustomField
  *
  * Класс модель для работы с Дополнительными полями
  *
- * @package AmoCRM\Models
+ * @package AmoCRM2\Models
  * @author mihasichechek <mihasichechek@gmail.com>
  * @link https://github.com/dotzero/amocrm-php
  *
