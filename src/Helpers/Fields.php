@@ -1,13 +1,13 @@
 <?php
 
-namespace AmoCRM\Helpers;
+namespace AmoCRM2\Helpers;
 
 /**
  * Class Fields
  *
  * Хелпер для хранения идентификаторов полей amoCRM API
  *
- * @package AmoCRM\Helpers
+ * @package AmoCRM2\Helpers
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
