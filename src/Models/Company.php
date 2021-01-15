@@ -1,11 +1,11 @@
 <?php
 
-namespace AmoCRM\Models;
+namespace AmoCRM2\Models;
 
-use AmoCRM\Models\Traits\SetTags;
-use AmoCRM\Models\Traits\SetDateCreate;
-use AmoCRM\Models\Traits\SetLastModified;
-use AmoCRM\Models\Traits\SetLinkedLeadsId;
+use AmoCRM2\Models\Traits\SetTags;
+use AmoCRM2\Models\Traits\SetDateCreate;
+use AmoCRM2\Models\Traits\SetLastModified;
+use AmoCRM2\Models\Traits\SetLinkedLeadsId;
 
 /**
  * Class Company
