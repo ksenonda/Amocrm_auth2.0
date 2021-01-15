@@ -2,7 +2,7 @@
 
 namespace AmoCRM2\Request;
 
-use AmoCRM\NetworkException;
+use AmoCRM2\NetworkException;
 
 /**
  * Class CurlHandle
