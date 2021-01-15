@@ -1,5 +1,5 @@
 {
-    "name": "ksenonda/amocrm2.0",
+    "name": "ksenonda/amocrm-2",
     "description": "Клиент для работы с API amoCRM",
     "license": "MIT",
     "keywords": ["amocrm", "crm", "api"],
