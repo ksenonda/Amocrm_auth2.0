@@ -272,7 +272,7 @@ class Request
             return false;
         }
         */
-        return $result;//['response']//
+        return $result['response'];////
     }
 
     /**
