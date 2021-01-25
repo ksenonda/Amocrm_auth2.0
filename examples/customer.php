@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    $amo = new \AmoCRM\Client(getenv('DOMAIN'), getenv('LOGIN'), getenv('HASH'));
+    $amo = new \AmoCRM2\Client($account_link, $token);
 
     // Список покупателей
     // Метод для получения покупателей аккаунта
