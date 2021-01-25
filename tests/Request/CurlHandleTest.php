@@ -7,7 +7,7 @@ class CurlHandleTest extends TestCase
 
     public function setUp()
     {
-        $this->handle = new \AmoCRM\Request\CurlHandle();
+        $this->handle = new \AmoCRM2\Request\CurlHandle();
     }
 
     public function testOpen()
