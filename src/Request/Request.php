@@ -173,10 +173,10 @@ class Request
     {
         
         $query = http_build_query($this->parameters->getGet(), null, '&');
-
+        $query = '?'.$query;
         $domain = $this->parameters->getAuth('domain');
         $endpoint = $domain.$url.$query;
-
+        
         return $endpoint;
     }
 
