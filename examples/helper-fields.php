@@ -28,6 +28,6 @@ try {
     $fields['StatusId'] = 10525225;
     $fields['ResponsibleUserId'] = 697344;
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
