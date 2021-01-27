@@ -37,6 +37,6 @@ if ($accessToken->hasExpired())
                 
         }
 $token = $accessToken->getToken();
-$account_link = $provider->urlAccount();
+$account_link = $provider->authDomain();
 
 $amo = new \AmoCRM2\Client($account_link, $token); 
