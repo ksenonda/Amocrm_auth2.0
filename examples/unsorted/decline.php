@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 try {
-    $amo = new \AmoCRM\Client(getenv('DOMAIN'), getenv('LOGIN'), getenv('HASH'));
+    $amo = new \AmoCRM2\Client($account_link, $token);
 
     // Если не указывать логин, вернутся сведения о владельце API ключа.
     $account = $amo->account->getUserByLogin();
@@ -13,6 +13,6 @@ try {
     // Метод для отклонения неразобранных заявок.
     print_r($amo->unsorted->apiDecline($unsortedId, $account['id']));
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
