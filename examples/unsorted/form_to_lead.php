@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 try {
-    $amo = new \AmoCRM\Client(getenv('DOMAIN'), getenv('LOGIN'), getenv('HASH'));
+    $amo = new \AmoCRM2\Client($account_link, $token);
 
     // Добавление неразобранных заявок
     // Метод позволяет добавлять неразобранные заявки по одной или пакетно
@@ -55,6 +55,6 @@ try {
     $unsortedId = $unsorted->apiAddForms();
     print_r($unsortedId);
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
