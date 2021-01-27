@@ -53,6 +53,6 @@ try {
 
     $task->apiUpdate((int)$id, 'Текст задачи', 'now');
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
