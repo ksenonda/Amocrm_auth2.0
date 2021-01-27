@@ -22,6 +22,6 @@ try {
     // Если не указывать логин, вернутся сведения о владельце API ключа.
     print_r($amo->account->getUserByLogin());
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
