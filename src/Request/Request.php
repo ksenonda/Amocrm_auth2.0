@@ -251,28 +251,15 @@ class Request
      */
     protected function parseResponse($response, $info)
     {
-        $result = json_decode($response, true);
-
-       /* if (floor($info['http_code'] / 100) >= 3) {
-            if (isset($result['response']['error_code']) && $result['response']['error_code'] > 0) {
-                $code = $result['response']['error_code'];
-            } elseif ($result !== null) {
-                $code = 0;
-            } else {
-                $code = $info['http_code'];
-            }
-            if (isset($result['response']['error'])) {
-                throw new Exception($result['response']['error'], $code);
-            } elseif (isset($result['response'])) {
-                throw new Exception(json_encode($result['response']));
-            } else {
-                throw new Exception('Invalid response body.', $code);
-            }
-        } elseif (!isset($result['response'])) {
-            return false;
+        if ($info['http_code'] == 200) 
+        {
+            $result = json_decode($response, true);
+            return $result['response'];
         }
-        */
-        return $result['response'];////
+        else
+        {
+            throw new Exception('Что-то пошло не так', $info['http_code']);     
+        }
     }
 
     /**
