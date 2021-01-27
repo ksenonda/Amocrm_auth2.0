@@ -59,6 +59,6 @@ try {
         'limit_rows' => 3
     ]));
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s', $e->getCode(), $e->getMessage());
 }
