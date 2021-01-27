@@ -59,6 +59,6 @@ try {
 
     $lead->apiUpdate((int)$id, 'now');
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s', $e->getCode(), $e->getMessage());
 }
