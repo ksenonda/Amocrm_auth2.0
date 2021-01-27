@@ -35,6 +35,6 @@ try {
     $link['to_id'] = 3673249;
     var_dump($link->apiUnlink());
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
