@@ -258,7 +258,7 @@ class Request
         }
         else
         {
-            throw new Exception('Что-то пошло не так', $info['http_code']);     
+            throw new Exception('Что-то пошло не так', $info['http_code']);  //   
         }
     }
 
