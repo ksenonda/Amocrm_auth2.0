@@ -21,6 +21,6 @@ try {
 
     $call->apiAdd('my_service_name', '601eb8fab9707d8009dba552f2d411a3');
 
-} catch (\AmoCRM\Exception $e) {
+} catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
