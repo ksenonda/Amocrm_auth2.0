@@ -254,7 +254,15 @@ class Request
         if ($info['http_code'] == 200) 
         {
             $result = json_decode($response, true);
-            return $result['response'];
+            if (isset($result['response']))
+            {
+              return $result['response'];  
+            }
+            else
+            {
+                return $result;
+            }
+            
         }
         else
         {
