@@ -37,6 +37,13 @@ class Account extends AbstractModel
         return $short ? $this->getShorted($result['account']) : $result['account'];
     }
 
+    public function apiUser()
+    {
+        $response = $this->getRequest('/v3/user');
+
+        return $response;
+    }
+
         /**
      * Урезание значения возвращаемого методом apiCurrent,
      * оставляет только основные поля такие как 'id', 'name', 'type_id', 'enums'
