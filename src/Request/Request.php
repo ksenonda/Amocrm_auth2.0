@@ -257,7 +257,7 @@ class Request
 
             if (isset($result['response']['error'])) 
             {
-                throw new Exception($result['response']['error'], $code);
+                throw new Exception($result['response']['error'], $info['http_code']);
             } 
             elseif (isset($result['response'])) 
             {
@@ -265,7 +265,7 @@ class Request
             } 
             else 
             {
-                throw new Exception('Invalid response body.', $code);
+                throw new Exception('Invalid response body.', $info['http_code']);
             }
         } 
         elseif (!isset($result['response'])) 
