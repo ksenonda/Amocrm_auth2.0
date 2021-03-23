@@ -17,7 +17,7 @@ use AmoCRM2\Helpers\Format;
  * @author dotzero <mail@dotzero.ru>
  * @link http://www.dotzero.ru/
  * @link https://github.com/dotzero/amocrm-php
- * @property \AmoCRM2\Models\Account $account +
+ * @property \AmoCRM2\Models\Account $account
  * @property \AmoCRM2\Models\Catalog $catalog
  * @property \AmoCRM2\Models\CatalogElement $catalog_element
  * @property \AmoCRM2\Models\Company $company
