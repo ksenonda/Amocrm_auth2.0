@@ -35,14 +35,14 @@ try
             'filter[value_before][leads_statuses][0][status_id]' => 17079863,
         
         //responsible_user_id - изменение ответственного
-            'filter[value_after][responsible_user_id]' => 32321,
+            'filter[value_before][responsible_user_id]' => 32321,
 
         //custom_field_values - изменение кастомных полей
-            'filter[value_after][custom_field_values]' => 145,
+            'filter[value_before][custom_field_values]' => 145,
             'filter[type]' => 'custom_field_57832_value_changed',
 
         //value - изменение значения - работает с типами nps_rate_added/sale_field_changed/name_field_changed/ltv_field_changed/custom_field_value_changed
-            'filter[value_after][value]' => 155,
+            'filter[value_before][value]' => 155,
             'filter[type]' => 'sale_field_changed',
             'filter[entity]' => 'lead',
 
