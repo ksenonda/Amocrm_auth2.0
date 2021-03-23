@@ -26,6 +26,7 @@ use AmoCRM2\Helpers\Format;
  * @property \AmoCRM2\Models\CustomersPeriods $customers_periods
  * @property \AmoCRM2\Models\CustomField $custom_field
  * @property \AmoCRM2\Models\Lead $lead
+ * @property \AmoCRM2\Models\Event $event
  * @property \AmoCRM2\Models\Links $links
  * @property \AmoCRM2\Models\Note $note
  * @property \AmoCRM2\Models\Pipelines $pipelines
@@ -59,8 +60,7 @@ class Client
      * Client constructor
      *
      * @param string $domain Поддомен или домен amoCRM
-     * @param string $login Логин amoCRM
-     * @param string $apikey Ключ пользователя amoCRM
+     * @param string $token токен amoCRM
      * @param string|null $proxy Прокси сервер для отправки запроса
      */
     public function __construct($domain, $token, $proxy = null)
