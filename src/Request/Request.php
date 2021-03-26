@@ -138,6 +138,45 @@ class Request
         return $this->request($url);
     }
 
+    protected function patchRequest($url, $parameters = [])
+    {
+        $headers = $this->prepareHeaders($modified);
+        $endpoint = $this->prepareEndpoint($url);
+
+        $ch = $this->curlHandle->open();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'amoCRM-oAuth-client/1.0');
+        curl_setopt($curl, CURLOPT_URL, $endpoint);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        if (!empty($parameters)) 
+        {
+          curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+        }
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+
+        $result = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
+
+        $this->curlHandle->close();
+
+        $this->lastHttpCode = $info['http_code'];
+        $this->lastHttpResponse = $result;
+
+
+        if ($result === false && !empty($error)) 
+        {
+            throw new NetworkException($error, $errno);
+        }
+
+        return $this->parseResponse($result, $info);
+    }
+
     /**
      * Подготавливает список заголовков HTTP
      *
