@@ -62,4 +62,39 @@ class NewCustomFields extends AbstractModel
 
         return isset($response) ? $response : [];
     }
+    public function apiAdd($name, $id, $values_array)
+    {
+        $data = [];
+        foreach ($values_array as $values) 
+        {
+            $code = $values[0];
+            $text = $values[1];
+            if (is_numeric($code))
+            {
+              $data[] = ['field_code' => $code,
+                        'values' => 
+                        [
+                          ['value' => $text]
+                        ]
+                      ];
+            }
+            else
+            {
+              $data[] = ['field_id' => $code,
+                        'values' => 
+                        [
+                          ['value' => $text]
+                        ]
+                      ];
+            }
+        }
+        $parameters = [
+                        ['id' => $id,
+                        'custom_fields_values' => $data
+                        ]
+                    ];
+        $response = $this->patchRequest('/api/v4/'.$name, $parameters);
+
+        return isset($response) ? $response : [];
+    }
 }
