@@ -65,25 +65,23 @@ class NewCustomFields extends AbstractModel
     public function apiAdd($name, $id, $values_array)
     {
         $data = [];
-        foreach ($values_array as $values) 
+        foreach ($values_array as $key => $value) 
         {
-            $code = $values[0];
-            $text = $values[1];
-            if (is_numeric($code))
+            if (is_numeric($key))
             {
-              $data[] = ['field_code' => $code,
+              $data[] = ['field_code' => $key,
                         'values' => 
                         [
-                          ['value' => $text]
+                          ['value' => $value]
                         ]
                       ];
             }
             else
             {
-              $data[] = ['field_id' => $code,
+              $data[] = ['field_id' => $key,
                         'values' => 
                         [
-                          ['value' => $text]
+                          ['value' => $value]
                         ]
                       ];
             }
