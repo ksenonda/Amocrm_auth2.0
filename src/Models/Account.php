@@ -40,7 +40,7 @@ class Account extends AbstractModel
     {
         $result = $this->getRequest('/api/v4/account', $parameters);
 
-        return isset($response) ? $response : [];
+        return isset($result) ? $result : [];
     }
     public function apiUser()
     {
