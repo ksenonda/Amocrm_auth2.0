@@ -36,7 +36,12 @@ class Account extends AbstractModel
 
         return $short ? $this->getShorted($result['account']) : $result['account'];
     }
+    public function apiv4Current($parameters = [])
+    {
+        $result = $this->getRequest('/api/v4/account', $parameters);
 
+        return isset($response) ? $response : [];
+    }
     public function apiUser()
     {
         $response = $this->getRequest('/v3/user');
