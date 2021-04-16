@@ -58,5 +58,11 @@ class Event extends AbstractModel
         $response = $this->getRequest('/api/v4/events', $parameters, $modified);
 
         return isset($response['_embedded']['events']) ? $response['_embedded']['events'] : [];
+    }
+    public function apiTypes($parameters)
+    {
+        $response = $this->getRequest('/api/v4/events/types', $parameters);
+
+        return isset($response['_embedded']['events_types']) ? $response['_embedded']['events_types'] : [];
     }   
 }
