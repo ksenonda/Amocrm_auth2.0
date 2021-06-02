@@ -62,6 +62,12 @@ class Lead extends AbstractModel
 
         return isset($response['leads']) ? $response['leads'] : [];
     }
+    public function apiv4List($parameters, $modified = null)
+    {
+        $response = $this->getRequest('/api/v4/leads', $parameters, $modified);
+
+        return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+    }
 
     /**
      * Добавление сделки
