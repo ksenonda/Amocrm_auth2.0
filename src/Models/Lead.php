@@ -153,7 +153,9 @@ class Lead extends AbstractModel
         {
             $updated_values = $lead->getValues();
 
-            $this->checkId($updated_values['id']);
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
 
             $updated_values['last_modified'] = strtotime($modified);
             $parameters['leads']['update'][] = $updated_values; 
