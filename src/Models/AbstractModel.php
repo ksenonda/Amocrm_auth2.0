@@ -193,7 +193,7 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
     protected function checkId($id)
     {
         if (intval($id) != $id || $id < 1) {
-            throw new Exception('Id must be integer and positive');
+            throw new Exception("Id $id must be integer and positive");
         }
 
         return true;
