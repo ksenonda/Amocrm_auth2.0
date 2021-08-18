@@ -138,4 +138,29 @@ class Lead extends AbstractModel
 
         return empty($response['leads']['update']['errors']);
     }
+
+    public function apiv4Update(array $leads, $modified = 'now')
+    {
+        //$this->checkId($id);
+
+        $parameters = [
+            'leads' => [
+                'update' => [],
+            ],
+        ];
+
+        foreach ($leads AS $lead) 
+        {
+            $updated_values = $lead->getValues();
+
+            $this->checkId($updated_values['id']);
+
+            $updated_values['last_modified'] = strtotime($modified);
+            $parameters['leads']['update'][] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/leads', $parameters);
+
+        return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+    }
 }
