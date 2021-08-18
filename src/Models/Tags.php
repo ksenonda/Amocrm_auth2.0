@@ -5,24 +5,20 @@ namespace AmoCRM2\Models;
 /**
  * Class Tags
  *
- * Класс модель для работы с Дополнительными полями
+ * Класс модель для работы с тэгами
  *
  * @package AmoCRM2\Models
- * @author mihasichechek <mihasichechek@gmail.com>
- * @link https://github.com/dotzero/amocrm-php
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
  */
 class Tags extends AbstractModel
 {
 	/**
-     * Список кастомных полей
+     * Список тэгов
      *
-     * Метод для получения списка кастомных полей с возможностью постраничной выборки.
-     * Ограничение по возвращаемым на одной странице (offset) данным - 50 шт
+     * Метод для получения списка тэгов с возможностью постраничной выборки.
+     * Ограничение по возвращаемым на одной странице (offset) данным - 250 шт
      *
-     * @link https://www.amocrm.ru/developers/content/crm_platform/custom-fields
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tags-api#tags-list
      * @param array $parameters Массив параметров к amoCRM API
      * @param null|string $modified Дополнительная фильтрация по (изменено с)
      * @return array Ответ amoCRM API
