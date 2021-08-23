@@ -138,7 +138,7 @@ class Request
         return $this->request($url);
     }
 
-    protected function patchRequest($url, $parameters = [])
+    protected function patchRequest($url, $parameters = [], $modified = null)
     {
         $headers = $this->prepareHeaders($modified);
         $endpoint = $this->prepareEndpoint($url);
