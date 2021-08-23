@@ -26,7 +26,7 @@ class Contact extends AbstractModel
     use SetNote, SetTags, SetDateCreate, SetLastModified, SetLinkedLeadsId;
 
     /**
-     * @var array Список доступный полей для модели (исключая кастомные поля)
+     * @var array Список доступный полей для модели
      */
     protected $fields = [
         'name',
@@ -41,6 +41,7 @@ class Contact extends AbstractModel
         'tags',
         'notes',
         'modified_user_id',
+        'custom_fields_values'
     ];
 
     /**
@@ -129,6 +130,27 @@ class Contact extends AbstractModel
         $response = $this->postRequest('/private/api/v2/json/contacts/set', $parameters);
 
         return empty($response['contacts']['update']['errors']);
+    }
+
+    public function apiv4Update(array $contacts, $modified = 'now')
+    {
+        $parameters = [];
+
+        foreach ($contacts AS $contact) 
+        {
+            $updated_values = $contact->getValues();
+
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
+
+            $updated_values['last_modified'] = strtotime($modified);
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/contacts', $parameters, $modified);
+
+        return isset($response['_embedded']['contacts']) ? $response['_embedded']['contacts'] : [];
     }
 
     /**
