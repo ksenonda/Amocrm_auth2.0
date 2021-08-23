@@ -28,6 +28,7 @@ class Company extends AbstractModel
      * @var array Список доступный полей для модели
      */
     protected $fields = [
+        'id',
         'name',
         'request_id',
         'date_create',
