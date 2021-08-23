@@ -181,4 +181,24 @@ class Note extends AbstractModel
 
         return empty($response['notes']['update']['errors']);
     }
+    public function apiv4Update(array $notes, $modified = 'now')
+    {
+        $parameters = [];
+
+        foreach ($notes AS $note) 
+        {
+            $updated_values = $note->getValues();
+
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
+
+            $updated_values['last_modified'] = strtotime($modified);
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/notes', $parameters, $modified);
+
+        return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
+    }
 }
