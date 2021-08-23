@@ -59,6 +59,18 @@ try {
 
     $lead->apiUpdate((int)$id, 'now');
 
+    // Или массовое обновление:
+    $lead = $amo->lead;
+    $lead->debug(true); // Режим отладки
+    $lead1 = clone $lead;
+    $lead1['id'] = 24180715;
+    $lead1['name'] = 'Тестовая сделка 1: новое название';
+    $lead2 = clone $lead;
+    $lead2['id'] = 24190891;
+    $lead2['name'] = 'Тестовая сделка 2: новое название';
+
+    $result = $amo->lead->apiv4Update([$lead1, $lead2]);
+
 } catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s', $e->getCode(), $e->getMessage());
 }
