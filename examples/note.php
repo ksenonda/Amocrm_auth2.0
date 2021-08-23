@@ -23,9 +23,9 @@ try {
     ], '-100 DAYS'));
 
     // Создадим тестовый контакт к которому привяжем примечание
-    $contact = $amo->contact;
-    $contact['name'] = 'ФИО';
-    $contactId = $contact->apiAdd();
+    $note = $amo->contact;
+    $note['name'] = 'ФИО';
+    $noteId = $note->apiAdd();
 
     // Добавление и обновление примечаний
     // Метод позволяет добавлять примечание по одному или пакетно,
@@ -33,7 +33,7 @@ try {
 
     $note = $amo->note;
     $note->debug(true); // Режим отладки
-    $note['element_id'] = $contactId;
+    $note['element_id'] = $noteId;
     $note['element_type'] = \AmoCRM\Models\Note::TYPE_CONTACT; // 1 - contact, 2 - lead
     $note['note_type'] = \AmoCRM\Models\Note::COMMON; // @see https://developers.amocrm.ru/rest_api/notes_type.php
     $note['text'] = 'Текст примечания';
@@ -53,12 +53,24 @@ try {
     // Обновление задач
     $note = $amo->note;
     $note->debug(true); // Режим отладки
-    $note['element_id'] = $contactId;
+    $note['element_id'] = $noteId;
     $note['element_type'] = \AmoCRM\Models\Note::TYPE_CONTACT; // 1 - contact, 2 - lead
     $note['note_type'] = \AmoCRM\Models\Note::COMMON; // @see https://developers.amocrm.ru/rest_api/notes_type.php
     $note['text'] = 'Апдейт примечания';
 
     $note->apiUpdate((int)$id, 'now');
+
+    // Или массовое обновление:
+    $note = $amo->note;
+    $note->debug(true); // Режим отладки
+    $note1 = clone $note;
+    $note1['id'] = 24180715;
+    $note1['name'] = 'Тестовый контакт 1: новое название';
+    $note2 = clone $note;
+    $note2['id'] = 24190891;
+    $note2['name'] = 'Тестовый контакт 2: новое название';
+
+    $result = $amo->note->apiv4Update([$note1, $note2]);
 
 } catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
