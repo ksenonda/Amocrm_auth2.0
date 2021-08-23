@@ -144,11 +144,7 @@ class Lead extends AbstractModel
     {
         //$this->checkId($id);
 
-        $parameters = [
-            'leads' => [
-                'update' => [],
-            ],
-        ];
+        $parameters = [];
 
         foreach ($leads AS $lead) 
         {
@@ -159,7 +155,7 @@ class Lead extends AbstractModel
             $this->checkId($id);
 
             $updated_values['last_modified'] = strtotime($modified);
-            $parameters['leads']['update'][] = $updated_values; 
+            $parameters[] = $updated_values; 
         }
 
         $response = $this->patchRequest('/api/v4/leads', $parameters, $modified);
