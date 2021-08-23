@@ -25,7 +25,7 @@ class Lead extends AbstractModel
     use SetNote, SetTags, SetDateCreate, SetLastModified;
 
     /**
-     * @var array Список доступный полей для модели (исключая кастомные поля)
+     * @var array Список доступный полей для модели
      */
     protected $fields = [
         'id',
@@ -44,6 +44,7 @@ class Lead extends AbstractModel
         'notes',
         'modified_user_id',
         'loss_reason_id',
+        'custom_fields_values'
     ];
 
     /**
@@ -142,7 +143,6 @@ class Lead extends AbstractModel
 
     public function apiv4Update(array $leads, $modified = 'now')
     {
-        //$this->checkId($id);
 
         $parameters = [];
 
