@@ -162,7 +162,7 @@ class Lead extends AbstractModel
             $parameters['leads']['update'][] = $updated_values; 
         }
 
-        $response = $this->patchRequest('/api/v4/leads', $parameters);
+        $response = $this->patchRequest('/api/v4/leads', $parameters, $modified);
 
         return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
     }
