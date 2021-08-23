@@ -26,6 +26,7 @@ class Note extends AbstractModel
      * @var array Список доступный полей для модели (исключая кастомные поля)
      */
     protected $fields = [
+        'id',
         'element_id',
         'element_type',
         'note_type',
