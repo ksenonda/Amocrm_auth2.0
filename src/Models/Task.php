@@ -26,6 +26,7 @@ class Task extends AbstractModel
      * @var array Список доступный полей для модели (исключая кастомные поля)
      */
     protected $fields = [
+        'id',
         'element_id',
         'element_type',
         'date_create',
