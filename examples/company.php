@@ -54,6 +54,18 @@ try {
 
     $company->apiUpdate((int)$id, 'now');
 
+    // Или массовое обновление:
+    $company = $amo->company;
+    $company->debug(true); // Режим отладки
+    $company1 = clone $company;
+    $company1['id'] = 24180715;
+    $company1['name'] = 'Тестовая компания 1: новое название';
+    $company2 = clone $company;
+    $company2['id'] = 24190891;
+    $company2['name'] = 'Тестовая компания 2: новое название';
+
+    $result = $amo->company->apiv4Update([$company1, $company2]);
+
 } catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
