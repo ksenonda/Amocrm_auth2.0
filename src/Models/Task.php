@@ -154,4 +154,24 @@ class Task extends AbstractModel
 
         return empty($response['tasks']['update']['errors']);
     }
+    public function apiv4Update(array $tasks, $modified = 'now')
+    {
+        $parameters = [];
+
+        foreach ($tasks AS $task) 
+        {
+            $updated_values = $tasks->getValues();
+
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
+
+            $updated_values['last_modified'] = strtotime($modified);
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/tasks', $parameters, $modified);
+
+        return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
+    }
 }
