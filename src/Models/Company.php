@@ -25,7 +25,7 @@ class Company extends AbstractModel
     use SetTags, SetDateCreate, SetLastModified, SetLinkedLeadsId;
 
     /**
-     * @var array Список доступный полей для модели (исключая кастомные поля)
+     * @var array Список доступный полей для модели
      */
     protected $fields = [
         'name',
@@ -37,6 +37,7 @@ class Company extends AbstractModel
         'linked_leads_id',
         'tags',
         'modified_user_id',
+        'custom_fields_values'
     ];
 
     /**
@@ -111,7 +112,7 @@ class Company extends AbstractModel
         $this->checkId($id);
 
         $parameters = [
-            'contacts' => [
+            'companies' => [
                 'update' => [],
             ],
         ];
@@ -120,10 +121,31 @@ class Company extends AbstractModel
         $company['id'] = $id;
         $company['last_modified'] = strtotime($modified);
 
-        $parameters['contacts']['update'][] = $company;
+        $parameters['companies']['update'][] = $company;
 
         $response = $this->postRequest('/private/api/v2/json/company/set', $parameters);
 
-        return empty($response['contacts']['update']['errors']);
+        return empty($response['companies']['update']['errors']);
+    }
+
+    public function apiv4Update(array $companies, $modified = 'now')
+    {
+        $parameters = [];
+
+        foreach ($companies AS $company) 
+        {
+            $updated_values = $company->getValues();
+
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
+
+            $updated_values['last_modified'] = strtotime($modified);
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/companies', $parameters, $modified);
+
+        return isset($response['_embedded']['companies']) ? $response['_embedded']['companies'] : [];
     }
 }
