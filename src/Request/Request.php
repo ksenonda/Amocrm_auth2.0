@@ -145,18 +145,18 @@ class Request
 
         $ch = $this->curlHandle->open();
 
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'amoCRM-oAuth-client/1.0');
-        curl_setopt($curl, CURLOPT_URL, $endpoint);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'amoCRM-oAuth-client/1.0');
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
         if (!empty($parameters)) 
         {
-          curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters));
         }
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
         $result = curl_exec($ch);
         $info = curl_getinfo($ch);
