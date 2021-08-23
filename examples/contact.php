@@ -54,6 +54,18 @@ try {
 
     $contact->apiUpdate((int)$id, 'now');
 
+    // Или массовое обновление:
+    $contact = $amo->contact;
+    $contact->debug(true); // Режим отладки
+    $contact1 = clone $contact;
+    $contact1['id'] = 24180715;
+    $contact1['name'] = 'Тестовый контакт 1: новое название';
+    $contact2 = clone $contact;
+    $contact2['id'] = 24190891;
+    $contact2['name'] = 'Тестовый контакт 2: новое название';
+
+    $result = $amo->contact->apiv4Update([$contact1, $contact2]);
+
     // Связи между сделками и контактами
     print_r($amo->contact->apiLinks([
         'limit_rows' => 3
