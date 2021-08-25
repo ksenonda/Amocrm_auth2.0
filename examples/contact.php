@@ -19,6 +19,9 @@ try {
         'limit_rows' => 1,
     ], '-100 DAYS'));
 
+    // получение контакта с доп сущностями по версии v4
+    $contact = $amo->contact->apiv4List(['id' => $contact_id, 'with' => ['customers']]);
+
     // Добавление и обновление контактов
     // Метод позволяет добавлять контакты по одному или пакетно,
     // а также обновлять данные по уже существующим контактам.
@@ -63,6 +66,26 @@ try {
     $contact2 = clone $contact;
     $contact2['id'] = 24190891;
     $contact2['name'] = 'Тестовый контакт 2: новое название';
+
+    $result = $amo->contact->apiv4Update([$contact1, $contact2]);
+
+    // доступно массовое обновление кастомных полей
+    // в ключах массива доступна запись как field_id так и field_code
+    //справа в значениях доступна запись как единичного значения, так и массива значений
+    //если записывается массив, можно записывать как без ключей, так и с ключами (enum_id или enum_code)
+    $custom_fields = 
+    [
+        729349 => [1249127 => '2', 1249131 => '4'], //пример 1 field_id -> массив значений с енумами
+        729349 => ['2','4'], //пример 2 field_id -> массив значений без енумов
+    ];
+    $contact = $amo->contact;
+    $contact->debug(true); // Режим отладки
+    $contact1 = clone $contact;
+    $contact1['id'] = 24180715;
+    $contact1['custom_fields_values'] = $custom;
+    $contact2 = clone $contact;
+    $contact2['id'] = 24190891;
+    $contact2['custom_fields_values'] = $custom;
 
     $result = $amo->contact->apiv4Update([$contact1, $contact2]);
 
