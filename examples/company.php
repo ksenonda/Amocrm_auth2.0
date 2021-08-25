@@ -66,6 +66,26 @@ try {
 
     $result = $amo->company->apiv4Update([$company1, $company2]);
 
+    // доступно массовое обновление кастомных полей
+    // в ключах массива доступна запись как field_id так и field_code
+    //справа в значениях доступна запись как единичного значения, так и массива значений
+    //если записывается массив, можно записывать как без ключей, так и с ключами (enum_id или enum_code)
+    $custom_fields = 
+    [
+        729349 => [1249127 => '2', 1249131 => '4'], //пример 1 field_id -> массив значений с енумами
+        729349 => ['2','4'], //пример 2 field_id -> массив значений без енумов
+    ];
+    $company = $amo->company;
+    $company->debug(true); // Режим отладки
+    $company1 = clone $company;
+    $company1['id'] = 24180715;
+    $company1['custom_fields_values'] = $custom;
+    $company2 = clone $company;
+    $company2['id'] = 24190891;
+    $company2['custom_fields_values'] = $custom;
+
+    $result = $amo->company->apiv4Update([$company1, $company2]);
+
 } catch (\AmoCRM2\Exception $e) {
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
