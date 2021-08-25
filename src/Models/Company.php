@@ -141,6 +141,11 @@ class Company extends AbstractModel
 
             $this->checkId($id);
 
+            if (isset($updated_values['custom_fields_values']))
+            {
+                $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
+            }
+
             $updated_values['last_modified'] = strtotime($modified);
             $parameters[] = $updated_values; 
         }
