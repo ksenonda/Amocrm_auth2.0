@@ -62,7 +62,12 @@ class Contact extends AbstractModel
 
         return isset($response['contacts']) ? $response['contacts'] : [];
     }
+    public function apiv4List($parameters, $modified = null)
+    {
+        $response = $this->getRequest('/api/v4/contacts', $parameters, $modified);
 
+        return isset($response['_embedded']['contacts']) ? $response['_embedded']['contacts'] : [];
+    }
     /**
      * Добавление контактов
      *
