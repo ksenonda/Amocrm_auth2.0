@@ -158,6 +158,54 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
         return $this;
     }
 
+    public function handleCustomFields(array $array)
+    {
+        $new_arr = [];
+
+        foreach ($arr as $key => $field) 
+        {
+            if (is_numeric($key))
+            {
+                $field_name = 'field_id';
+            }
+            else
+            {
+                $field_name = 'field_code';
+            }
+            $first_key = array_key_first($field);
+            
+            if (is_numeric($first_key))
+            {
+                if ($first_key == 0)
+                {
+                    $enum_name = null;
+                }
+                else
+                {
+                    $enum_name = 'enum_id';
+                }
+            }
+            else
+            {
+                $enum_name = 'enum_code';
+            }
+            $values_arr = [];
+            foreach ($field as $enum => $value) 
+            {
+                if (empty($enum_name))
+                {
+                    $values_arr[] = ['value' => $value];
+                }
+                else
+                {
+                    $values_arr[] = ['value' => $value, $enum_name => $enum];
+                }
+            }
+            $new_arr[] = [$field_name => $key, 'values' => $values_arr];
+        }
+        return $new_arr;
+    }
+
     /**
      * Добавление кастомного поля типа мультиселект модели
      *
