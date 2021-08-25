@@ -160,9 +160,7 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
 
     public function handleCustomFields(array $array)
     {
-        $new_arr = [];
-
-        foreach ($arr as $key => $field) 
+        foreach ($array as $key => $field) 
         {
             if (is_numeric($key))
             {
@@ -172,34 +170,43 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
             {
                 $field_name = 'field_code';
             }
-            $first_key = array_key_first($field);
-            
-            if (is_numeric($first_key))
+
+            if (is_array($field))
             {
-                if ($first_key == 0)
+                $first_key = array_key_first($field);
+                
+                if (is_numeric($first_key))
                 {
-                    $enum_name = null;
+                    if ($first_key == 0)
+                    {
+                        $enum_name = null;
+                    }
+                    else
+                    {
+                        $enum_name = 'enum_id';
+                    }
                 }
                 else
                 {
-                    $enum_name = 'enum_id';
+                    $enum_name = 'enum_code';
+                }
+                $values_arr = [];
+                foreach ($field as $enum => $value) 
+                {
+                    if (empty($enum_name))
+                    {
+                        $values_arr[] = ['value' => $value];
+                    }
+                    else
+                    {
+                        $values_arr[] = ['value' => $value, $enum_name => $enum];
+                    }
                 }
             }
             else
             {
-                $enum_name = 'enum_code';
-            }
-            $values_arr = [];
-            foreach ($field as $enum => $value) 
-            {
-                if (empty($enum_name))
-                {
-                    $values_arr[] = ['value' => $value];
-                }
-                else
-                {
-                    $values_arr[] = ['value' => $value, $enum_name => $enum];
-                }
+               $values_arr = [];
+               $values_arr[] = ['value' => $field];
             }
             $new_arr[] = [$field_name => $key, 'values' => $values_arr];
         }
