@@ -38,6 +38,7 @@ class Task extends AbstractModel
         'responsible_user_id',
         'complete_till',
         'created_user_id',
+        'result'
     ];
 
     /**
