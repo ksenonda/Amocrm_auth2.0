@@ -44,7 +44,8 @@ class Lead extends AbstractModel
         'notes',
         'modified_user_id',
         'loss_reason_id',
-        'custom_fields_values'
+        'custom_fields_values',
+        'closed_at'
     ];
 
     /**
