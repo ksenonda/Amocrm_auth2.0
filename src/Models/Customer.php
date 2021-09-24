@@ -27,12 +27,17 @@ class Customer extends AbstractModel
      */
     protected $fields = [
         'name',
-        'main_user_id',
-        'created_by',
         'next_price',
-        'periodicity',
-        'tags',
         'next_date',
+        'responsible_user_id',
+        'main_user_id',
+        'periodicity',
+        'created_by',
+        'updated_by',
+        'created_at',
+        'updated_at',
+        'custom_fields_values',
+        'tags',
         'request_id',
     ];
 
@@ -51,7 +56,12 @@ class Customer extends AbstractModel
 
         return isset($response['customers']) ? $response['customers'] : [];
     }
+    public function apiv4List($parameters)
+    {
+        $response = $this->getRequest('/api/v4/customers', $parameters);
 
+        return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
+    }
     /**
      * Добавление покупателей
      *
@@ -118,5 +128,36 @@ class Customer extends AbstractModel
         $response = $this->postRequest('/private/api/v2/json/customers/set', $parameters);
 
         return isset($response['customers']) ? true : false;
+    }
+
+    public function apiv4Update(array $customers)
+    {
+
+        $parameters = [];
+
+        foreach ($customers as $customer) 
+        {
+            $updated_values = $customer->getValues();
+
+            $id = (int)$updated_values['id'];
+
+            $this->checkId($id);
+
+            if (isset($updated_values['custom_fields_values']))
+            {
+                $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
+            }
+
+            if (isset($updated_values['tags']))
+            {
+                $updated_values['_embedded']['tags'] = $this->handleTags($updated_values['tags']);
+            }
+
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/customers', $parameters);
+
+        return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
     }
 }
