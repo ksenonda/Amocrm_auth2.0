@@ -112,7 +112,12 @@ class Note extends AbstractModel
 
         return isset($response['notes']) ? $response['notes'] : [];
     }
+    public function apiv4List($entity, $parameters, $modified = null)
+    {
+        $response = $this->getRequest('/api/v4/'.$entity.'/notes', $parameters, $modified);
 
+        return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
+    }
     /**
      * Добавление примечания
      *
