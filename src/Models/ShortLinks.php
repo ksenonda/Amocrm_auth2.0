@@ -42,7 +42,7 @@ class ShortLinks extends AbstractModel
                         'metadata' => ['entity_type' => $entity_type, 'entity_id' => $entity_id]
                         ]
                     ];
-        $response = $this->postRequest('/api/v4/short_links', $parameters);
+        $response = $this->postv4Request('/api/v4/short_links', $parameters);
 
         return isset($response['_embedded']['short_links']) ? $response['_embedded']['short_links'] : [];
     }
