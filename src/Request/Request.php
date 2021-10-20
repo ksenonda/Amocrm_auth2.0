@@ -138,7 +138,7 @@ class Request
         return $this->request($url);
     }
 
-    protected function postv4Request($url, $parameters = [])
+    protected function postv4Request($url, $parameters = [], $modified = null)
     {
         $headers = $this->prepareHeaders($modified);
         $endpoint = $this->prepareEndpoint($url);
