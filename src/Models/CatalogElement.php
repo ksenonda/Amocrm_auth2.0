@@ -24,6 +24,7 @@ class CatalogElement extends AbstractModel
         'catalog_id',
         'name',
         'request_id',
+        'custom_fields_values'
     ];
 
     /**
@@ -79,6 +80,23 @@ class CatalogElement extends AbstractModel
         }
 
         return count($elements) == 1 ? array_shift($result) : $result;
+    }
+
+    public function apiv4Add($catalog_id, $elements = [])
+    {
+        $params = [];
+        if (empty($elements)) 
+        {
+            $elements = [$this];
+        }
+        foreach ($elements as $element) 
+        {
+            $params[] = $element->getValues();
+        }
+
+        $response = $this->postv4Request('/api/v4/catalogs/'.$catalog_id.'/elements', $params);
+
+        return isset($response['_embedded']['elements']) ? $response['_embedded']['elements'] : [];
     }
 
     /**
