@@ -88,6 +88,49 @@ class Links extends AbstractModel
         return empty($response['links']['link']['errors']);
     }
 
+    public function apiv4Link()
+    {
+        $parameters = [];
+
+        $values = $link->getValues(); 
+
+        $from_id = $values['from_id'];
+        $from = $values['from'];
+
+        $to_id = $values['to_id'];
+        $to = $values['to'];
+
+        $main_contact = $values['main_contact'] ?? NULL;
+        $quantity = $values['quantity'] ?? NULL;
+        $catalog_id = $values['catalog_id'] ?? NULL;
+        $price_id = $values['price_id'] ?? NULL;
+
+        $metadata = [];
+        if (!empty($main_contact))
+        {
+            $metadata['main_contact'] = $main_contact;
+        }
+        if (!empty($quantity))
+        {
+            $metadata['quantity'] = $quantity;
+        }
+        if (!empty($catalog_id))
+        {
+            $metadata['catalog_id'] = $catalog_id;
+        }
+        if (!empty($price_id))
+        {
+            $metadata['price_id'] = $price_id;
+        }
+
+        $parameters[] = ['to_entity_id' => $to_id, 'to_entity_type' => $to, 'metadata' => $metadata];
+       
+
+        $response = $this->postv4Request('/api/v4/'.$from.'/'.$from_id.'/link', $parameters);
+
+        return isset($response['_embedded']['links']) ? $response['_embedded']['links'] : [];
+    }
+
     /**
      * Разрыв связи между сущностями
      *
