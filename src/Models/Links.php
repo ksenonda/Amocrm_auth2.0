@@ -92,7 +92,7 @@ class Links extends AbstractModel
     {
         $parameters = [];
 
-        $values = $link->getValues(); 
+        $values = $this->getValues(); 
 
         $from_id = $values['from_id'];
         $from = $values['from'];
