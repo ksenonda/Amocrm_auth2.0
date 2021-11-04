@@ -92,7 +92,12 @@ class Links extends AbstractModel
     {
         $parameters = [];
 
-        $values = $this->getValues(); 
+        $links = [$this];
+
+        foreach ($links as $link) 
+        {
+            $values = $link->getValues(); 
+        }
 
         $from_id = $values['from_id'];
         $from = $values['from'];
