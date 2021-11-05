@@ -82,17 +82,11 @@ class CatalogElement extends AbstractModel
         return count($elements) == 1 ? array_shift($result) : $result;
     }
 
-    public function apiv4Add($catalog_id, $elements = [])
+    public function apiv4Add($catalog_id)
     {
-        $params = [];
-        if (empty($elements)) 
-        {
-            $elements = [$this];
-        }
-        foreach ($elements as $element) 
-        {
-            $params[] = $element->getValues();
-        }
+        $values = $this->getValues();
+        
+        $params = $values[0];
 
         $response = $this->postv4Request('/api/v4/catalogs/'.$catalog_id.'/elements', $params);
 
