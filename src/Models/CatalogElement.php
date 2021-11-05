@@ -84,7 +84,8 @@ class CatalogElement extends AbstractModel
 
     public function apiv4Add($catalog_id)
     {
-        $params = $this->getValues();
+        $params = [];
+        $params[] = $this->getValues();
 
         $response = $this->postv4Request('/api/v4/catalogs/'.$catalog_id.'/elements', $params);
 
