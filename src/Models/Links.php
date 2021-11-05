@@ -28,6 +28,9 @@ class Links extends AbstractModel
         'from_catalog_id',
         'to_catalog_id',
         'quantity',
+        'main_contact',
+        'price_id',
+        'catalog_id'
     ];
 
     /**
@@ -92,12 +95,7 @@ class Links extends AbstractModel
     {
         $parameters = [];
 
-        $links = [$this];
-
-        foreach ($links as $link) 
-        {
-            $values = $link->getValues(); 
-        }
+        $values = $this->getValues(); 
 
         $from_id = $values['from_id'];
         $from = $values['from'];
