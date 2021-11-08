@@ -30,7 +30,8 @@ class Links extends AbstractModel
         'quantity',
         'main_contact',
         'price_id',
-        'catalog_id'
+        'catalog_id',
+        'updated_by'
     ];
 
     /**
@@ -166,5 +167,38 @@ class Links extends AbstractModel
         }
 
         return empty($response['links']['unlink']['errors']);
+    }
+
+    public function apiv4Unlink()
+    {
+        $parameters = [];
+
+        $values = $this->getValues(); 
+
+        $from_id = $values['from_id'];
+        $from = $values['from'];
+
+        $to_id = $values['to_id'];
+        $to = $values['to'];
+
+        $updated_by = $values['updated_by'] ?? NULL;
+        $catalog_id = $values['catalog_id'] ?? NULL;
+
+        $metadata = [];
+        if (!empty($updated_by))
+        {
+            $metadata['updated_by'] = $updated_by;
+        }
+        if (!empty($catalog_id))
+        {
+            $metadata['catalog_id'] = $catalog_id;
+        }
+
+        $parameters[] = ['to_entity_id' => $to_id, 'to_entity_type' => $to, 'metadata' => $metadata];
+       
+
+        $response = $this->postv4Request('/api/v4/'.$from.'/'.$from_id.'/unlink', $parameters);
+
+        return isset($response['_embedded']['links']) ? $response['_embedded']['links'] : [];
     }
 }
