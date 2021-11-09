@@ -340,10 +340,14 @@ class Request
             elseif (isset($result['response'])) 
             {
                 throw new Exception(json_encode($result['response']));
+            }
+            elseif (!empty($result))
+            {
+                throw new Exception($response, $info['http_code']);
             } 
             else 
             {
-                throw new Exception('Invalid response body.', $info['http_code']);
+                throw new Exception(NULL, $info['http_code']);
             }
         } 
         elseif (!isset($result['response'])) 
