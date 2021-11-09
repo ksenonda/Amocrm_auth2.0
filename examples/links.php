@@ -47,7 +47,7 @@ try {
     $link['to_id'] = 393793;
     $link['catalog_id'] = 4849;
     //$link['updated_by'] = 0;
-    $res = $link->apiv4Unink();
+    $res = $link->apiv4Unlink();
 
     // Разрыв связи между сущностями
     // Метод позволяет удалять связи между сущностями
