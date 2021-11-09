@@ -83,7 +83,8 @@ class Exception extends \Exception
      */
     public function __construct($message = null, $code = 0)
     {
-        if (isset($this->errors[$code])) {
+        if (empty($message) and isset($this->errors[$code])) 
+        {
             $message = $this->errors[$code];
         }
 
