@@ -110,7 +110,12 @@ class Customer extends AbstractModel
         $parameters = [];
         foreach ($customers as $customer) 
         { 
-            $parameters[] = $customer->getValues();
+            $new = $customer->getValues();
+            if (isset($new['next_date']))
+            {
+                $new['next_date'] = (int)$new['next_date'];
+            }
+            $parameters[] = $new;
         }
         $response = $this->postv4Request('/api/v4/customers', $parameters, $modified);
         return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
