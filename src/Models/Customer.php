@@ -100,6 +100,22 @@ class Customer extends AbstractModel
         return count($customers) == 1 ? array_shift($result) : $result;
     }
 
+    public function apiv4Add($customers = [])
+    {
+        if (empty($customers))
+        {
+            $customers = [$this];
+        }
+
+        $parameters = [];
+        foreach ($customers as $customer) 
+        { 
+            $parameters[] = $customer->getValues();
+        }
+        $response = $this->postv4Request('/api/v4/customers', $parameters, $modified);
+        return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
+    }
+
     /**
      * Обновление покупателей
      *
