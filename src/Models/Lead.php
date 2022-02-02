@@ -30,22 +30,26 @@ class Lead extends AbstractModel
     protected $fields = [
         'id',
         'name',
-        'date_create',
-        'last_modified',
         'status_id',
         'pipeline_id',
-        'price',
-        'responsible_user_id',
         'created_user_id',
+        'created_by',
+        'modified_user_id',
+        'updated_by',
+        'closed_at',
+        'date_create',
+        'created_at',
+        'updated_at',
+        'last_modified',
+        'loss_reason_id',
+        'responsible_user_id',
+        'custom_fields_values',
+        'price',
         'request_id',
         'linked_company_id',
         'tags',
         'visitor_uid',
-        'notes',
-        'modified_user_id',
-        'loss_reason_id',
-        'custom_fields_values',
-        'closed_at'
+        'notes',       
     ];
 
     /**
@@ -159,13 +163,31 @@ class Lead extends AbstractModel
             {
                 $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
             }
+            if (isset($updated_values['tags']))
+            {
+                $updated_values['_embedded']['tags'] = $this->handleTags($updated_values['tags']);
+            }
 
-            $updated_values['last_modified'] = strtotime($modified);
+            $updated_values['updated_at'] = strtotime($modified);
             $parameters[] = $updated_values; 
         }
 
         $response = $this->patchRequest('/api/v4/leads', $parameters, $modified);
 
         return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+    }
+
+    /**
+     * Список причин отказов
+     *
+     * Метод для получения списка причин отказов
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function lossReasons()
+    {
+        $response = $this->getRequest('/api/v4/leads/loss_reasons');
+
+        return isset($response['_embedded']['loss_reasons']) ? $response['_embedded']['loss_reasons'] : [];
     }
 }
