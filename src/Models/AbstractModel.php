@@ -158,6 +158,46 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
         return $this;
     }
 
+    /**
+     * Добавление кастомного поля модели
+     *
+     * @param int $id Уникальный идентификатор заполняемого дополнительного поля
+     * @param mixed $value Значение заполняемого дополнительного поля
+     * @param mixed $enum Тип дополнительного поля
+     * @param mixed $subtype Тип подтипа поля
+     * @return $this
+     */
+    public function addv4CustomField($id, $value, $enum = false)
+    {
+        $field = [];
+
+        if (!is_array($value)) 
+        {
+            if ($enum !== false)
+            {
+                $field = [$enum => $value];
+            }
+            else
+            {
+                $field = [$value];
+            }  
+        } 
+        else 
+        {
+            $field = $value;
+        }
+
+        $this->values['custom_fields_values'][$id] = $field;
+
+        return $this;
+    }
+    /**
+     * Обработка кастомных полей для v4
+     *
+     * @param array $array входной массив, может содержать id поля, код поля, а так же значение или массив значений поля, id енума или код енума
+     * @return $new_arr - перебранный массив
+     */
+    
     public function handleCustomFields(array $array)
     {
         foreach ($array as $key => $field) 
@@ -252,5 +292,36 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
         }
 
         return true;
+    }
+
+    public function handleTags ($tags)
+    {
+        $new_arr = [];
+        if (is_array($tags))
+        {
+            foreach ($tags as $tag) 
+            {
+                if (is_numeric($tag))
+                {
+                    $new_arr[] = ['id' => $tag];
+                }
+                else
+                {
+                    $new_arr[] = ['name' => $tag];
+                }
+            }
+        }
+        else
+        {
+            if (is_numeric($tags))
+            {
+                $new_arr[] = ['id' => $tags];
+            }
+            else
+            {
+                $new_arr[] = ['name' => $tags];
+            }
+        }
+        return $new_arr;
     }
 }
