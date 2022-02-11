@@ -103,7 +103,8 @@ class Task extends AbstractModel
 
     public function apiv4List($parameters)
     {
-        $new_params = [];
+        /*$new_params = [];
+
         if (isset($parameters['page']))
         {
             $new_params['page'] = $parameters['page'];
@@ -125,8 +126,8 @@ class Task extends AbstractModel
             {
                 $new_params['filter'][$key][] = $parameter;
             }
-        }
-        $response = $this->getRequest('/api/v4/tasks', $new_params);
+        }*/
+        $response = $this->getRequest('/api/v4/tasks', $parameters);
 
         return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
     }
