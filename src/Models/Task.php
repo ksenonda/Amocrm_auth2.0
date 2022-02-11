@@ -27,18 +27,27 @@ class Task extends AbstractModel
      */
     protected $fields = [
         'id',
+        'responsible_user_id',
+        'entity_id',
         'element_id',
+        'entity_type',
         'element_type',
-        'date_create',
-        'last_modified',
-        'status',
-        'request_id',
+        'is_completed',
+        'task_type_id',
         'task_type',
         'text',
-        'responsible_user_id',
+        'duration',
         'complete_till',
+        'result',
+        'created_by',
         'created_user_id',
-        'result'
+        'created_at',
+        'date_create',
+        'updated_by',
+        'updated_at',
+        'last_modified',
+        'status',
+        'request_id',     
     ];
 
     /**
@@ -50,6 +59,13 @@ class Task extends AbstractModel
      * @const int Типа задачи Сделка
      */
     const TYPE_LEAD = 2;
+
+    /** @const int Типа задачи Компания */
+    const TYPE_COMPANY = 3;
+    
+
+    /** @const int Типа задачи Покупатель */
+    const TYPE_CUSTOMER = 12;
 
     /**
      * Сеттер для дата до которой необходимо завершить задачу
@@ -83,6 +99,36 @@ class Task extends AbstractModel
         $response = $this->getRequest('/private/api/v2/json/tasks/list', $parameters, $modified);
 
         return isset($response['tasks']) ? $response['tasks'] : [];
+    }
+
+    public function apiv4List($parameters)
+    {
+        $new_params = [];
+        if (isset($parameters['page']))
+        {
+            $new_params['page'] = $parameters['page'];
+            unset($parameters['page']);
+        }
+        if (isset($parameters['limit']))
+        {
+            $new_params['limit'] = $parameters['limit'];
+            unset($parameters['limit']);
+        }
+        if (isset($parameters['order']))
+        {
+            $new_params['order'] = $parameters['order'];
+            unset($parameters['order']);
+        }
+        if (!empty($parameters))
+        {
+            foreach ($parameters as $key => $parameter) 
+            {
+                $new_params['filter'][$key][] = $parameter;
+            }
+        }
+        $response = $this->getRequest('/api/v4/tasks', $new_params);
+
+        return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
     }
 
     /**
@@ -160,7 +206,7 @@ class Task extends AbstractModel
     {
         $parameters = [];
 
-        foreach ($tasks AS $task) 
+        foreach ($tasks as $task) 
         {
             $updated_values = $tasks->getValues();
 
@@ -168,7 +214,7 @@ class Task extends AbstractModel
 
             $this->checkId($id);
 
-            $updated_values['last_modified'] = strtotime($modified);
+            $updated_values['updated_at'] = strtotime($modified);
             $parameters[] = $updated_values; 
         }
 
