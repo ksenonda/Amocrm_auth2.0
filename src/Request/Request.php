@@ -168,6 +168,10 @@ class Request
         $this->lastHttpCode = $info['http_code'];
         $this->lastHttpResponse = $result;
 
+        $this->printDebug('curl_exec', $result);
+        $this->printDebug('curl_getinfo', $info);
+        $this->printDebug('curl_error', $error);
+        $this->printDebug('curl_errno', $errno);
 
         if ($result === false && !empty($error)) 
         {
@@ -207,6 +211,10 @@ class Request
         $this->lastHttpCode = $info['http_code'];
         $this->lastHttpResponse = $result;
 
+        $this->printDebug('curl_exec', $result);
+        $this->printDebug('curl_getinfo', $info);
+        $this->printDebug('curl_error', $error);
+        $this->printDebug('curl_errno', $errno);
 
         if ($result === false && !empty($error)) 
         {
