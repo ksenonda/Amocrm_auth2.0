@@ -26,6 +26,7 @@ class Customer extends AbstractModel
      * @var array Список доступный полей для модели (исключая кастомные поля)
      */
     protected $fields = [
+        'id',
         'name',
         'next_price',
         'next_date',
