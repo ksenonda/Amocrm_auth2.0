@@ -209,7 +209,7 @@ class Task extends AbstractModel
 
         foreach ($tasks as $task) 
         {
-            $updated_values = $tasks->getValues();
+            $updated_values = $task->getValues();
 
             $id = (int)$updated_values['id'];
 
