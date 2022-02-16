@@ -200,6 +200,7 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
     
     public function handleCustomFields(array $array)
     {
+        $new_arr = [];
         foreach ($array as $key => $field) 
         {
             if (is_numeric($key))
