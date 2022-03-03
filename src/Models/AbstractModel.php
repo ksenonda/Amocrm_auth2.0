@@ -244,6 +244,10 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
                     }
                 }
             }
+            elseif (is_null($field))
+            {
+                $values_arr = NULL;
+            }
             else
             {
                $values_arr = [];
