@@ -31,18 +31,24 @@ class Contact extends AbstractModel
     protected $fields = [
         'id',
         'name',
-        'request_id',
-        'date_create',
-        'last_modified',
+        'first_name',
+        'last_name',
         'responsible_user_id',
+        'created_by',
         'created_user_id',
+        'updated_by',
+        'modified_user_id',
+        'created_at',
+        'date_create',
+        'updated_at',
+        'last_modified',
+        'custom_fields_values',
+        'request_id',
         'linked_leads_id',
         'company_name',
         'linked_company_id',
         'tags',
         'notes',
-        'modified_user_id',
-        'custom_fields_values'
     ];
 
     /**
@@ -154,8 +160,12 @@ class Contact extends AbstractModel
             {
                 $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
             }
+            if (isset($updated_values['tags']))
+            {
+                $updated_values['_embedded']['tags'] = $this->handleTags($updated_values['tags']);
+            }
 
-            $updated_values['last_modified'] = strtotime($modified);
+            $updated_values['updated_at'] = strtotime($modified);
             $parameters[] = $updated_values; 
         }
 
