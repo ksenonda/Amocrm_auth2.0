@@ -242,9 +242,13 @@ class Lead extends AbstractModel
         return empty($response['leads']['update']['errors']);
     }
 
-    public function apiv4Update(array $leads, $modified = 'now')
+    public function apiv4Update($leads = [], $modified = 'now')
     {
-
+        if (empty($leads))
+        {
+            $leads = [$this];
+        }
+        
         $parameters = [];
 
         foreach ($leads AS $lead) 
