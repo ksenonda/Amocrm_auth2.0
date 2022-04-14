@@ -99,7 +99,7 @@ class Lead extends AbstractModel
      * @param null|string $modified Дополнительная фильтрация по (изменено с)
      * @return array Ответ amoCRM API
      */
-    public function apiv4One($id, $parameters)
+    public function apiv4One($id, $parameters = [])
     {
         $response = $this->getRequest('/api/v4/leads/'.$id, $parameters);
 
@@ -207,7 +207,7 @@ class Lead extends AbstractModel
 
         $response = $this->postv4Request('/api/v4/leads/complex', $parameters);
 
-        return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+        return isset($response) ? $response : [];;
     }
 
     /**
@@ -312,7 +312,7 @@ class Lead extends AbstractModel
     {
         $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id);
 
-        return isset($response) ? $response : [];;
+        return isset($response) ? $response : [];
     }
 
     /**
@@ -326,7 +326,7 @@ class Lead extends AbstractModel
     {
         $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id.'/statuses');
 
-        return isset($response['_embedded']['pipelines']) ? $response['_embedded']['pipelines'] : [];
+        return isset($response['_embedded']['statuses']) ? $response['_embedded']['statuses'] : [];
     }
 
     /**
@@ -340,7 +340,7 @@ class Lead extends AbstractModel
     {
         $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id.'/statuses/'.$status_id);
 
-        return isset($response) ? $response : [];;
+        return isset($response) ? $response : [];
     }
 
     /**
@@ -372,7 +372,7 @@ class Lead extends AbstractModel
      *
      * @return $this
      */
-    public function addEntitites($contact = null, $company = null)
+    public function addEntities($contact = null, $company = null)
     {
         if (!empty($contact))
         {
