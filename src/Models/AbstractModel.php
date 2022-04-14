@@ -329,4 +329,36 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
         }
         return $new_arr;
     }
+
+    /**
+     * Добавляет тэги к сущности, для методов в4
+     *
+     * @param int|str|array $tags
+     * @return $this
+     */
+
+    public function addTags($tags)
+    {
+        $tags_array = [];
+        if (!is_array($tags))
+        {
+            $tags = [$tags];
+        } 
+
+        foreach ($tags as $tag) 
+        {
+            if (is_numeric($tag))
+            {
+                $tags_array[] = ['id' => $tag];
+            }
+            else
+            {
+                $tags_array[] = ['name' => $tag];
+            }
+        }
+
+        $this->values['_embedded']['tags'] = $tags_array;
+        
+        return $this;
+    }
 }
