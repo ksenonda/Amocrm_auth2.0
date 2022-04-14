@@ -49,6 +49,35 @@ class Account extends AbstractModel
         return $response;
     }
 
+
+    /**
+     * Список пользователей
+     *
+     * Метод для получения списка пользователей
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Users($parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/users', $parameters);
+
+        return isset($response['_embedded']['users']) ? $response['_embedded']['users'] : [];
+    }
+
+    /**
+     * Пользователь по ID
+     *
+     * Метод для получения одного пользователя по id
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4User($user_id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/users/'.$user_id, $parameters);
+
+        return isset($response) ? $response : [];
+    }
+
         /**
      * Урезание значения возвращаемого методом apiCurrent,
      * оставляет только основные поля такие как 'id', 'name', 'type_id', 'enums'
