@@ -49,7 +49,8 @@ class Lead extends AbstractModel
         'linked_company_id',
         'tags',
         'visitor_uid',
-        'notes',       
+        'notes', 
+        '_embedded'      
     ];
 
     /**
@@ -69,11 +70,40 @@ class Lead extends AbstractModel
 
         return isset($response['leads']) ? $response['leads'] : [];
     }
+    /**
+     * Список сделок, метод в4
+     *
+     * Метод для получения списка сделок с возможностью фильтрации и постраничной выборки.
+     * Ограничение по возвращаемым на одной странице (offset) данным - 500 сделок
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
     public function apiv4List($parameters, $modified = null)
     {
         $response = $this->getRequest('/api/v4/leads', $parameters, $modified);
 
         return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+    }
+
+    /**
+     * Получение сделки по id, метод в4
+     *
+     * Метод позволяет получить данные конкретной сделки по ID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#lead-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id, $parameters)
+    {
+        $response = $this->getRequest('/api/v4/leads/'.$id, $parameters);
+
+        return isset($response) ? $response : [];;
     }
 
     /**
@@ -112,6 +142,72 @@ class Lead extends AbstractModel
         }
 
         return count($leads) == 1 ? array_shift($result) : $result;
+    }
+
+    /**
+     * Добавление сделки, метод в4
+     *
+     * Метод позволяет добавлять сделки по одной или пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-add
+     * @param array $leads Массив сделок для пакетного добавления
+     * @return array Массив двнных по сделке(сделкам)
+     */
+    public function apiv4Add($leads = [])
+    {
+        if (empty($leads)) 
+        {
+            $leads = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($leads as $lead) 
+        {
+            $values = $lead->getValues();
+            if (isset($values['tags']))
+            {
+                $values['_embedded']['tags'] = $this->handleTags($values['tags']);
+            }
+            $parameters[] = $values;    
+        }
+
+        $response = $this->postv4Request('/api/v4/leads', $parameters);
+
+        return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
+    }
+
+    /**
+     * Добавление сделки совместно с контактом и компанией, комплексный метод в4
+     *
+     * Метод позволяет добавлять сделки по одной или пакетно. Для одной сделки можно указать не более 1 связанного контакта и 1 связанной компании
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-complex-add
+     * @param array $leads Массив сделок для пакетного добавления
+     * @return array Массив двнных по сделке(сделкам)
+     */
+    public function apiv4Complex($leads = [])
+    {
+        if (empty($leads)) 
+        {
+            $leads = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($leads as $lead) 
+        {
+            $values = $lead->getValues();
+            if (isset($values['tags']))
+            {
+                $values['_embedded']['tags'] = $this->handleTags($values['tags']);
+            }
+            $parameters[] = $values;    
+        }
+
+        $response = $this->postv4Request('/api/v4/leads/complex', $parameters);
+
+        return isset($response['_embedded']['leads']) ? $response['_embedded']['leads'] : [];
     }
 
     /**
@@ -189,5 +285,104 @@ class Lead extends AbstractModel
         $response = $this->getRequest('/api/v4/leads/loss_reasons');
 
         return isset($response['_embedded']['loss_reasons']) ? $response['_embedded']['loss_reasons'] : [];
+    }
+
+    /**
+     * Список воронок
+     *
+     * Метод для получения списка воронок
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function allPipelines()
+    {
+        $response = $this->getRequest('/api/v4/leads/pipelines');
+
+        return isset($response['_embedded']['pipelines']) ? $response['_embedded']['pipelines'] : [];
+    }
+
+    /**
+     * Воронка по ID
+     *
+     * Метод для получения одной воронки по id
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function onePipeline($pipeline_id)
+    {
+        $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id);
+
+        return isset($response) ? $response : [];;
+    }
+
+    /**
+     * Список этапов воронки
+     *
+     * Метод для получения списка этапов воронки
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function allStatuses($pipeline_id)
+    {
+        $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id.'/statuses');
+
+        return isset($response['_embedded']['pipelines']) ? $response['_embedded']['pipelines'] : [];
+    }
+
+    /**
+     * Этап воронки по ID
+     *
+     * Метод для получения одного этапа воронки по id
+     *
+     * @return array Ответ amoCRM API
+     */
+    public function oneStatus($pipeline_id, $status_id)
+    {
+        $response = $this->getRequest('/api/v4/leads/pipelines/'.$pipeline_id.'/statuses/'.$status_id);
+
+        return isset($response) ? $response : [];;
+    }
+
+    /**
+     * Привязка контакта, доп функция к созданию сделок по в4 
+     *
+     * @return $this
+     */
+    public function linkContact($contact_id, $is_main = true)
+    {
+        $this->values['_embedded']['contacts'][] = ['id' => $contact_id, 'is_main' => $is_main];
+
+        return $this;
+    }
+
+    /**
+     * Привязка компании, доп функция к созданию сделок по в4 
+     *
+     * @return $this
+     */
+    public function linkCompany($company_id)
+    {
+        $this->values['_embedded']['companies'][] = ['id' => $company_id];
+
+        return $this;
+    }
+
+    /**
+     * Привязка доп сущностей при комплексном методе, доп функция к созданию сделок по в4 
+     *
+     * @return $this
+     */
+    public function addEntitites($contact = null, $company = null)
+    {
+        if (!empty($contact))
+        {
+            $this->values['_embedded']['contacts'][] = $contact->getValues();
+        }
+        if (!empty($company))
+        {
+            $this->values['_embedded']['companies'][] = $company->getValues();
+        }
+
+        return $this;
     }
 }
