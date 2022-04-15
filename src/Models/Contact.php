@@ -162,6 +162,10 @@ class Contact extends AbstractModel
         foreach ($contacts as $contact) 
         {
             $values = $contact->getValues();
+            if (isset($values['custom_fields_values']))
+            {
+                $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
+            }
             if (isset($values['tags']))
             {
                 $values['_embedded']['tags'] = $this->handleTags($values['tags']);
