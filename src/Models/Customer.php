@@ -37,9 +37,12 @@ class Customer extends AbstractModel
         'updated_by',
         'created_at',
         'updated_at',
+        'closest_task_at',
+        'is_deleted',
         'custom_fields_values',
         'tags',
         'request_id',
+        '_embedded'
     ];
 
     /**
@@ -57,12 +60,40 @@ class Customer extends AbstractModel
 
         return isset($response['customers']) ? $response['customers'] : [];
     }
+
+    /**
+     * Список покупателей, метод в4
+     *
+     * Метод для получения покупателей аккаунта
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/customers-api#customers-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
     public function apiv4List($parameters)
     {
         $response = $this->getRequest('/api/v4/customers', $parameters);
 
         return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
     }
+
+    /**
+     * Получение покупателя по id, метод в4
+     *
+     * Метод позволяет получить данные конкретного покупателя по ID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/customers-api#customer-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/customers/'.$id, $parameters);
+
+        return isset($response) ? $response : [];;
+    }
+
     /**
      * Добавление покупателей
      *
@@ -101,6 +132,15 @@ class Customer extends AbstractModel
         return count($customers) == 1 ? array_shift($result) : $result;
     }
 
+    /**
+     * Добавление покупателей, метод в4
+     *
+     * Метод позволяет добавлять покупателей по одному или пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/customers-api#customers-add
+     * @param array $customers Массив покупателей для пакетного добавления
+     * @return int|array Уникальный идентификатор покупателя или массив при пакетном добавлении
+     */
     public function apiv4Add($customers = [])
     {
         if (empty($customers))
@@ -109,16 +149,23 @@ class Customer extends AbstractModel
         }
 
         $parameters = [];
+
         foreach ($customers as $customer) 
         { 
-            $new = $customer->getValues();
-            if (isset($new['next_date']))
+            $values = $customer->getValues();
+            if (isset($values['tags']))
             {
-                $new['next_date'] = (int)$new['next_date'];
+                $values['_embedded']['tags'] = $this->handleTags($values['tags']);
             }
-            $parameters[] = $new;
+            if (isset($values['next_date']))
+            {
+                $values['next_date'] = (int)$values['next_date'];
+            }
+            $parameters[] = $values;
         }
+
         $response = $this->postv4Request('/api/v4/customers', $parameters, $modified);
+
         return isset($response['_embedded']['customers']) ? $response['_embedded']['customers'] : [];
     }
 
@@ -152,8 +199,21 @@ class Customer extends AbstractModel
         return isset($response['customers']) ? true : false;
     }
 
-    public function apiv4Update(array $customers)
+    /**
+     * Обновление покупателей, метод в4
+     *
+     * Метод позволяет обновлять данные по уже существующим покупателям
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/customers-api#customers-edit
+     * @return bool Флаг успешности выполнения запроса
+     * @throws \AmoCRM\Exception
+     */
+    public function apiv4Update($customers = [])
     {
+        if (empty($customers))
+        {
+            $customers = [$this];
+        }
 
         $parameters = [];
 
