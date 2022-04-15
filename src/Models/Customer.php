@@ -165,6 +165,10 @@ class Customer extends AbstractModel
             {
                 $values['next_date'] = (int)$values['next_date'];
             }
+            else
+            {
+                $values['next_date'] = NULL;
+            }
             $parameters[] = $values;
         }
 
