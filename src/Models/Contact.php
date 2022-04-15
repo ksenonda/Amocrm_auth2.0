@@ -49,6 +49,7 @@ class Contact extends AbstractModel
         'linked_company_id',
         'tags',
         'notes',
+        '_embedded'
     ];
 
     /**
@@ -68,11 +69,39 @@ class Contact extends AbstractModel
 
         return isset($response['contacts']) ? $response['contacts'] : [];
     }
+    /**
+     * Список контактов, метод в4
+     *
+     * Метод для получения списка контактов с возможностью фильтрации и постраничной выборки.
+     * Ограничение по возвращаемым на одной странице (offset) данным - 250 контактов
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
     public function apiv4List($parameters, $modified = null)
     {
         $response = $this->getRequest('/api/v4/contacts', $parameters, $modified);
 
         return isset($response['_embedded']['contacts']) ? $response['_embedded']['contacts'] : [];
+    }
+    /**
+     * Получение контакта по id, метод в4
+     *
+     * Метод позволяет получить данные конкретного контакта по ID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contact-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/contacts/'.$id, $parameters);
+
+        return isset($response) ? $response : [];;
     }
     /**
      * Добавление контактов
@@ -113,6 +142,39 @@ class Contact extends AbstractModel
     }
 
     /**
+     * Добавление контакта, метод в4
+     *
+     * Метод позволяет добавлять контакт по одному или пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-add
+     * @param array $contacts Массив контактов для пакетного добавления
+     * @return array Массив данных по контакту(контактам)
+     */
+    public function apiv4Add($contacts = [])
+    {
+        if (empty($contacts)) 
+        {
+            $contacts = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($contacts as $contact) 
+        {
+            $values = $contact->getValues();
+            if (isset($values['tags']))
+            {
+                $values['_embedded']['tags'] = $this->handleTags($values['tags']);
+            }
+            $parameters[] = $values;    
+        }
+
+        $response = $this->postv4Request('/api/v4/contacts', $parameters);
+
+        return isset($response['_embedded']['contacts']) ? $response['_embedded']['contacts'] : [];
+    }
+
+    /**
      * Обновление контактов
      *
      * Метод позволяет обновлять данные по уже существующим контактам
@@ -143,9 +205,22 @@ class Contact extends AbstractModel
 
         return empty($response['contacts']['update']['errors']);
     }
-
-    public function apiv4Update(array $contacts, $modified = 'now')
+    /**
+     * Обновление контактов
+     *
+     * Метод позволяет обновлять данные по уже существующим контактам
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-edit
+     * @param string $modified Дата последнего изменения данной сущности
+     * @throws \AmoCRM\Exception
+     */
+    public function apiv4Update($contacts = [], $modified = 'now')
     {
+        if (empty($contacts))
+        {
+            $contacts = [$this];
+        }
+
         $parameters = [];
 
         foreach ($contacts AS $contact) 
@@ -189,5 +264,56 @@ class Contact extends AbstractModel
         $response = $this->getRequest('/private/api/v2/json/contacts/links', $parameters, $modified);
 
         return isset($response['links']) ? $response['links'] : [];
+    }
+
+    /**
+     * Чат по id контакта
+     *
+     * Метод для получения списка чатов контакта
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-chat-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4ChatByContactId($contact_id)
+    {
+        $response = $this->getRequest('/api/v4/contacts/chats', ['contact_id' => (int)$contact_id]);
+
+        return isset($response['_embedded']['chats']) ? $response['_embedded']['chats'] : [];
+    }
+
+    /**
+     * Контакт по id чата
+     *
+     * Метод для получения списка контактов чата
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-chat-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4ContactByChatId($chat_id)
+    {
+        $response = $this->getRequest('/api/v4/contacts/chats', ['chat_id' => $chat_id]);
+
+        return isset($response['_embedded']['chats']) ? $response['_embedded']['chats'] : [];
+    }
+
+    /**
+     * Привязка чатов к контактам
+     *
+     * Метод позволяет привязать чат к контакту. Чат может быть привязан только к 1 контакту
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/contacts-api#contacts-chat-connect
+     * @param array $parameters Массив параметров к amoCRM API
+     * @param null|string $modified Дополнительная фильтрация по (изменено с)
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4LinkChat($contact_id, $chat_id)
+    {
+        $response = $this->postv4Request('/api/v4/contacts/chats', ['contact_id' => (int)$contact_id, 'chat_id' => $chat_id]);
+
+        return isset($response['_embedded']['chats']) ? $response['_embedded']['chats'] : [];
     }
 }
