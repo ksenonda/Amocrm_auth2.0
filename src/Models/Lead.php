@@ -74,7 +74,7 @@ class Lead extends AbstractModel
      * Список сделок, метод в4
      *
      * Метод для получения списка сделок с возможностью фильтрации и постраничной выборки.
-     * Ограничение по возвращаемым на одной странице (offset) данным - 500 сделок
+     * Ограничение по возвращаемым на одной странице (offset) данным - 250 сделок
      *
      * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-list
      * @param array $parameters Массив параметров к amoCRM API
@@ -151,7 +151,7 @@ class Lead extends AbstractModel
      *
      * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-add
      * @param array $leads Массив сделок для пакетного добавления
-     * @return array Массив двнных по сделке(сделкам)
+     * @return array Массив данных по сделке(сделкам)
      */
     public function apiv4Add($leads = [])
     {
@@ -241,7 +241,15 @@ class Lead extends AbstractModel
 
         return empty($response['leads']['update']['errors']);
     }
-
+    /**
+     * Обновление сделки, метод в4
+     *
+     * Метод позволяет обновлять данные по уже существующим сделкам
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/leads-api#leads-edit
+     * @param string $modified Дата последнего изменения данной сущности
+     * @throws \AmoCRM\Exception
+     */
     public function apiv4Update($leads = [], $modified = 'now')
     {
         if (empty($leads))
