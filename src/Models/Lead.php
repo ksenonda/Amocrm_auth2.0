@@ -165,6 +165,10 @@ class Lead extends AbstractModel
         foreach ($leads as $lead) 
         {
             $values = $lead->getValues();
+            if (isset($values['custom_fields_values']))
+            {
+                $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
+            }
             if (isset($values['tags']))
             {
                 $values['_embedded']['tags'] = $this->handleTags($values['tags']);
@@ -198,6 +202,10 @@ class Lead extends AbstractModel
         foreach ($leads as $lead) 
         {
             $values = $lead->getValues();
+            if (isset($values['custom_fields_values']))
+            {
+                $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
+            }
             if (isset($values['tags']))
             {
                 $values['_embedded']['tags'] = $this->handleTags($values['tags']);
