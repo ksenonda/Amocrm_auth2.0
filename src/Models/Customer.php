@@ -153,6 +153,10 @@ class Customer extends AbstractModel
         foreach ($customers as $customer) 
         { 
             $values = $customer->getValues();
+            if (isset($values['custom_fields_values']))
+            {
+                $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
+            }
             if (isset($values['tags']))
             {
                 $values['_embedded']['tags'] = $this->handleTags($values['tags']);
@@ -229,10 +233,13 @@ class Customer extends AbstractModel
             {
                 $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
             }
-
             if (isset($updated_values['tags']))
             {
                 $updated_values['_embedded']['tags'] = $this->handleTags($updated_values['tags']);
+            }
+            if (isset($updated_values['next_date']))
+            {
+                $updated_values['next_date'] = (int)$updated_values['next_date'];
             }
 
             $parameters[] = $updated_values; 
