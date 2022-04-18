@@ -171,7 +171,9 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
     {
         $field = [];
 
-        if (!is_array($value)) 
+        if (is_null($value))
+        {}
+        elseif (!is_array($value)) 
         {
             if ($enum !== false)
             {
@@ -214,33 +216,40 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
 
             if (is_array($field))
             {
-                $first_key = array_key_first($field);
-                
-                if (is_numeric($first_key))
+                if (array_key_exists('vat_id', $field))
                 {
-                    if ($first_key == 0)
-                    {
-                        $enum_name = null;
-                    }
-                    else
-                    {
-                        $enum_name = 'enum_id';
-                    }
+                    $values_arr = $field;
                 }
                 else
                 {
-                    $enum_name = 'enum_code';
-                }
-                $values_arr = [];
-                foreach ($field as $enum => $value) 
-                {
-                    if (empty($enum_name))
+                    $first_key = array_key_first($field);
+                    
+                    if (is_numeric($first_key))
                     {
-                        $values_arr[] = ['value' => $value];
+                        if ($first_key == 0)
+                        {
+                            $enum_name = null;
+                        }
+                        else
+                        {
+                            $enum_name = 'enum_id';
+                        }
                     }
                     else
                     {
-                        $values_arr[] = ['value' => $value, $enum_name => $enum];
+                        $enum_name = 'enum_code';
+                    }
+                    $values_arr = [];
+                    foreach ($field as $enum => $value) 
+                    {
+                        if (empty($enum_name))
+                        {
+                            $values_arr[] = ['value' => $value];
+                        }
+                        else
+                        {
+                            $values_arr[] = ['value' => $value, $enum_name => $enum];
+                        }
                     }
                 }
             }
