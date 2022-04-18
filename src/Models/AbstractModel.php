@@ -172,7 +172,9 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
         $field = [];
 
         if (is_null($value))
-        {}
+        {
+            $field = NULL;
+        }
         elseif (!is_array($value)) 
         {
             if ($enum !== false)
@@ -216,9 +218,10 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
 
             if (is_array($field))
             {
+                $values_arr = [];
                 if (array_key_exists('vat_id', $field))
                 {
-                    $values_arr = $field;
+                    $values_arr[] = ['value' => $field];
                 }
                 else
                 {
@@ -239,7 +242,7 @@ abstract class AbstractModel extends Request implements ArrayAccess, ModelInterf
                     {
                         $enum_name = 'enum_code';
                     }
-                    $values_arr = [];
+    
                     foreach ($field as $enum => $value) 
                     {
                         if (empty($enum_name))
