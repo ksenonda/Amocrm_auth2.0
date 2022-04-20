@@ -103,7 +103,7 @@ class Lead extends AbstractModel
     {
         $response = $this->getRequest('/api/v4/leads/'.$id, $parameters);
 
-        return isset($response) ? $response : [];;
+        return isset($response) ? $response : [];
     }
 
     /**
