@@ -45,20 +45,45 @@ class Event extends AbstractModel
     /**
      * Список событий
      *
-     * Метод для получения списка событийс возможностью фильтрации и постраничной выборки.
+     * Метод для получения списка событий с возможностью фильтрации и постраничной выборки.
      * Ограничение по возвращаемым на одной странице (offset) данным - 100 событий
      *
-     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#events-list
      * @param array $parameters Массив параметров к amoCRM API
-     * @param null|string $modified Дополнительная фильтрация по (изменено с)
      * @return array Ответ amoCRM API
      */
-    public function apiList($parameters, $modified = null)
+    public function apiList($parameters = [])
     {
-        $response = $this->getRequest('/api/v4/events', $parameters, $modified);
+        $response = $this->getRequest('/api/v4/events', $parameters);
 
         return isset($response['_embedded']['events']) ? $response['_embedded']['events'] : [];
     }
+
+    /**
+     * Получение события по ID
+     *
+     * Метод позволяет получить данные конкретного события по ID
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#events-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/events/'.$id, $parameters);
+
+        return isset($response) ? $response : [];
+    }
+
+    /**
+     * Получение типов событий
+     *
+     * Метод позволяет получить все доступные для аккаунта типы событий
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#event-types
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
     public function apiTypes($parameters)
     {
         $response = $this->getRequest('/api/v4/events/types', $parameters);
