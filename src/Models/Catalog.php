@@ -23,6 +23,11 @@ class Catalog extends AbstractModel
     protected $fields = [
         'name',
         'request_id',
+        'type',
+        'sort',
+        'can_add_elements',
+        'can_link_multiple',
+        'custom_fields_values'
     ];
 
     /**
@@ -46,6 +51,40 @@ class Catalog extends AbstractModel
 
         return isset($response['catalogs']) ? $response['catalogs'] : [];
     }
+
+    /**
+     * Список каталогов, метод в4
+     *
+     * Метод для получения списка каталогов аккаунта.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#lists-list
+     * @param null|int $parameters - page и limit
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/catalogs', $parameters);
+
+        return isset($response['_embedded']['catalogs']) ? $response['_embedded']['catalogs'] : [];
+    }
+
+    /**
+     * Получение списка по id, метод в4
+     *
+     * Метод позволяет получить данные конкретного списка по ID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#list-detail
+     * @param array $id ID запрашиваемого списка
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id)
+    {
+        $response = $this->getRequest('/api/v4/catalogs/'.$id);
+
+        return isset($response) ? $response : [];;
+    }
+
 
     /**
      * Добавление каталогов
@@ -86,6 +125,34 @@ class Catalog extends AbstractModel
     }
 
     /**
+     * Добавление списка, метод в4
+     *
+     * Метод позволяет добавлять списки пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#lists-add
+     * @param array $catalogs Массив списков для пакетного добавления
+     * @return array Массив данных по списку(спискам)
+     */
+    public function apiv4Add($catalogs = [])
+    {
+        if (empty($catalogs)) 
+        {
+            $catalogs = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($catalogs as $catalog) 
+        {
+            $parameters[] = $catalog->getValues();    
+        }
+
+        $response = $this->postv4Request('/api/v4/catalogs', $parameters);
+
+        return isset($response['_embedded']['catalogs']) ? $response['_embedded']['catalogs'] : [];
+    }
+
+    /**
      * Обновление каталогов
      *
      * Метод позволяет обновлять данные по уже существующим каталогам
@@ -117,6 +184,34 @@ class Catalog extends AbstractModel
         }
 
         return empty($response['catalogs']['update']['errors']);
+    }
+
+    /**
+     * Обновление списка, метод в4
+     *
+     * Метод позволяет обновлять данные по уже существующим спискам
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#lists-edit
+     * @param string $modified Дата последнего изменения данной сущности
+     * @throws \AmoCRM\Exception
+     */
+    public function apiv4Update($catalogs = [])
+    {
+        if (empty($catalogs)) 
+        {
+            $catalogs = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($catalogs as $catalog) 
+        {
+            $parameters[] = $catalog->getValues();    
+        }
+
+        $response = $this->patchRequest('/api/v4/catalogs', $parameters, $modified);
+
+        return isset($response['_embedded']['catalogs']) ? $response['_embedded']['catalogs'] : [];
     }
 
     /**
