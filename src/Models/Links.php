@@ -31,7 +31,8 @@ class Links extends AbstractModel
         'main_contact',
         'price_id',
         'catalog_id',
-        'updated_by'
+        'updated_by',
+        'metadata'
     ];
 
     /**
@@ -56,6 +57,38 @@ class Links extends AbstractModel
         $response = $this->getRequest('/private/api/v2/json/links/list', $parameters);
 
         return isset($response['links']) ? $response['links'] : [];
+    }
+
+    /**
+     * Список связанных сущностей, метод в4
+     *
+     * Метод для получения связей между сущностями аккаунта
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/entity-links-api#links-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($entity_type, $entity_id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/'.$entity_type.'/'.$entity_id.'/links', $parameters);
+
+        return isset($response['_embedded']['links']) ? $response['_embedded']['links'] : [];
+    }
+
+    /**
+     * Массовый список связанных сущностей, метод в4
+     *
+     * Метод позволяет получить связанные сущности по ID-ам основных сущностей
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/entity-links-api#mass-links-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Mass($entity_type, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/'.$entity_type.'/links', $parameters);
+
+        return isset($response['_embedded']['links']) ? $response['_embedded']['links'] : [];
     }
 
     /**
@@ -92,6 +125,14 @@ class Links extends AbstractModel
         return empty($response['links']['link']['errors']);
     }
 
+    /**
+     * Привязка сущностей, метод в4
+     *
+     * Метод позволяет прикреплять сущности к основной сущности
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/entity-links-api#links-link
+     * @return array Ответ amoCRM API
+     */
     public function apiv4Link()
     {
         $parameters = [];
@@ -129,7 +170,6 @@ class Links extends AbstractModel
 
         $parameters[] = ['to_entity_id' => $to_id, 'to_entity_type' => $to, 'metadata' => $metadata];
        
-
         $response = $this->postv4Request('/api/v4/'.$from.'/'.$from_id.'/link', $parameters);
 
         return isset($response['_embedded']['links']) ? $response['_embedded']['links'] : [];
@@ -168,7 +208,14 @@ class Links extends AbstractModel
 
         return empty($response['links']['unlink']['errors']);
     }
-
+    /**
+     * Отвязка сущностей, метод в4
+     *
+     * Метод позволяет открепить сущности у основной сущности
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/entity-links-api#links-unlink
+     * @return array Ответ amoCRM API
+     */
     public function apiv4Unlink()
     {
         $parameters = [];
