@@ -25,6 +25,21 @@ class Salesbot extends AbstractModel
         'entity_type'
     ];
 
+        /**
+     * @const int Типа сущности Контакт
+     */
+    const ENTITY_CONTACT = 1;
+
+    /**
+     * @const int Типа сущности Сделка
+     */
+    const ENTITY_LEAD = 2;
+
+    /**
+     * @const int Типа сущности Компания
+     */
+    const ENTITY_COMPANY = 3;
+
     /**
      * Обновление сделки
      *
@@ -48,6 +63,6 @@ class Salesbot extends AbstractModel
 
         $response = $this->postRequest('/api/v2/salesbot/run', $parameters);
 
-        return empty($response['leads']['update']['errors']);
+        return $response;
     }
 }
