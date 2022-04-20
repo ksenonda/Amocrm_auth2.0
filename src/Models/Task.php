@@ -47,7 +47,8 @@ class Task extends AbstractModel
         'updated_at',
         'last_modified',
         'status',
-        'request_id',     
+        'request_id', 
+        'order'    
     ];
 
     /**
@@ -100,36 +101,38 @@ class Task extends AbstractModel
 
         return isset($response['tasks']) ? $response['tasks'] : [];
     }
-
-    public function apiv4List($parameters)
+    /**
+     * Список задач, метод в4
+     *
+     * Метод позволяет получить список задач в аккаунте
+     * Ограничение по возвращаемым на одной странице данным - 250 задач
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tasks-api#tasks-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($parameters = [])
     {
-        /*$new_params = [];
-
-        if (isset($parameters['page']))
-        {
-            $new_params['page'] = $parameters['page'];
-            unset($parameters['page']);
-        }
-        if (isset($parameters['limit']))
-        {
-            $new_params['limit'] = $parameters['limit'];
-            unset($parameters['limit']);
-        }
-        if (isset($parameters['order']))
-        {
-            $new_params['order'] = $parameters['order'];
-            unset($parameters['order']);
-        }
-        if (!empty($parameters))
-        {
-            foreach ($parameters as $key => $parameter) 
-            {
-                $new_params['filter'][$key][] = $parameter;
-            }
-        }*/
         $response = $this->getRequest('/api/v4/tasks', $parameters);
 
         return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
+    }
+
+    /**
+     * Получение задачи по ID, метод в4
+     *
+     * Метод позволяет получить данные конкретной задачи по ID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tasks-api#task-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/tasks/'.$id, $parameters);
+
+        return isset($response) ? $response : [];
     }
 
     /**
@@ -171,6 +174,34 @@ class Task extends AbstractModel
     }
 
     /**
+     * Добавление задач, метод в4
+     *
+     * Метод позволяет добавлять задачи в аккаунт пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tasks-api#tasks-add
+     * @param array $tasks Массив задач для пакетного добавления
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Add($tasks = [])
+    {
+        if (empty($tasks)) 
+        {
+            $tasks = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($tasks as $task) 
+        {
+            $parameters[] = $task->getValues();
+        }
+
+        $response = $this->postv4Request('/api/v4/tasks', $parameters);
+
+        return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
+    }
+
+    /**
      * Обновление задачи
      *
      * Метод позволяет обновлять данные по уже существующим задачам
@@ -203,24 +234,52 @@ class Task extends AbstractModel
 
         return empty($response['tasks']['update']['errors']);
     }
-    public function apiv4Update(array $tasks, $modified = 'now')
+
+    /**
+     * Редактирование задач, метод в4
+     *
+     * Метод позволяет редактировать задачи пакетно
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tasks-api#tasks-edit
+     * @param array $tasks Массив задач для пакетного добавления
+     * @return array Ответ amoCRM API
+     */
+
+    public function apiv4Update($tasks = [])
     {
+        if (empty($tasks)) 
+        {
+            $tasks = [$this];
+        }
+
         $parameters = [];
 
         foreach ($tasks as $task) 
         {
-            $updated_values = $task->getValues();
-
-            $id = (int)$updated_values['id'];
-
-            $this->checkId($id);
-
-            $updated_values['updated_at'] = strtotime($modified);
-            $parameters[] = $updated_values; 
+            $parameters[] = $task->getValues();
         }
 
-        $response = $this->patchRequest('/api/v4/tasks', $parameters, $modified);
+        $response = $this->patchRequest('/api/v4/tasks', $parameters);
 
         return isset($response['_embedded']['tasks']) ? $response['_embedded']['tasks'] : [];
+    }
+
+    /**
+     * Выполнение задачи, метод в4
+     *
+     * Метод для закрытия задач
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/tasks-api#tasks-complete
+     * @param array $tasks Массив задач для пакетного добавления
+     * @return array Ответ amoCRM API
+     */
+
+    public function apiv4Complete($task_id, $text = null)
+    {
+        $parameters = ['is_completed' => true, 'result' => ['text' => $text]];
+
+        $response = $this->patchRequest('/api/v4/tasks/'.$task_id, $parameters);
+
+        return isset($response) ? $response : [];
     }
 }
