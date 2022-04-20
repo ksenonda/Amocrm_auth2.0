@@ -181,6 +181,49 @@ class Request
         return $this->parseResponse($result, $info);
     }
 
+    protected function deletev4Request($url, $parameters = [], $modified = null)
+    {
+        $headers = $this->prepareHeaders($modified);
+        $endpoint = $this->prepareEndpoint($url);
+
+        $ch = $this->curlHandle->open();
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'amoCRM-oAuth-client/1.0');
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        if (!empty($parameters)) 
+        {
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters));
+        }
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        $result = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
+
+        $this->curlHandle->close();
+
+        $this->lastHttpCode = $info['http_code'];
+        $this->lastHttpResponse = $result;
+
+        $this->printDebug('curl_exec', $result);
+        $this->printDebug('curl_getinfo', $info);
+        $this->printDebug('curl_error', $error);
+        $this->printDebug('curl_errno', $errno);
+
+        if ($result === false && !empty($error)) 
+        {
+            throw new NetworkException($error, $errno);
+        }
+
+        return $this->parseResponse($result, $info);
+    }
+
     protected function patchRequest($url, $parameters = [], $modified = null)
     {
         $headers = $this->prepareHeaders($modified);
