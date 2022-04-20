@@ -79,8 +79,10 @@ class Task extends AbstractModel
      */
     public function setCompleteTill($date)
     {
-        $this->values['complete_till'] = strtotime($date);
-
+        if (!is_int($date))
+        {
+           $this->values['complete_till'] = strtotime($date); 
+        }
         return $this;
     }
 
@@ -128,9 +130,9 @@ class Task extends AbstractModel
      * @param array $parameters Массив параметров к amoCRM API
      * @return array Ответ amoCRM API
      */
-    public function apiv4One($id, $parameters = [])
+    public function apiv4One($id)
     {
-        $response = $this->getRequest('/api/v4/tasks/'.$id, $parameters);
+        $response = $this->getRequest('/api/v4/tasks/'.$id);
 
         return isset($response) ? $response : [];
     }
