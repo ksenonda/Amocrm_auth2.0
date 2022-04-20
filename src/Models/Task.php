@@ -20,7 +20,6 @@ use AmoCRM2\Models\Traits\SetLastModified;
  */
 class Task extends AbstractModel
 {
-    //use SetDateCreate, SetLastModified;
 
     /**
      * @var array Список доступный полей для модели (исключая кастомные поля)
@@ -67,21 +66,6 @@ class Task extends AbstractModel
 
     /** @const int Типа задачи Покупатель */
     const TYPE_CUSTOMER = 12;
-
-    /**
-     * Сеттер для дата до которой необходимо завершить задачу
-     *
-     * Если указано время 23:59, то в интерфейсах системы
-     * вместо времени будет отображаться "Весь день"
-     *
-     * @param string $date Дата в произвольном формате
-     * @return $this
-     */
-    /*public function setCompleteTill($date)
-    {
-        $this->values['complete_till'] = strtotime($date); 
-        return $this;
-    }*/
 
     /**
      * Список задач
@@ -273,7 +257,7 @@ class Task extends AbstractModel
      * @return array Ответ amoCRM API
      */
 
-    public function apiv4Complete($task_id, $text = null)
+    public function apiv4Complete($task_id, $text = ' ')
     {
         $parameters = ['is_completed' => true, 'result' => ['text' => $text]];
 
