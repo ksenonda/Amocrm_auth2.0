@@ -20,7 +20,7 @@ use AmoCRM2\Models\Traits\SetLastModified;
  */
 class Task extends AbstractModel
 {
-    use SetDateCreate, SetLastModified;
+    //use SetDateCreate, SetLastModified;
 
     /**
      * @var array Список доступный полей для модели (исключая кастомные поля)
@@ -77,14 +77,11 @@ class Task extends AbstractModel
      * @param string $date Дата в произвольном формате
      * @return $this
      */
-    public function setCompleteTill($date)
+    /*public function setCompleteTill($date)
     {
-        if (!is_int($date))
-        {
-           $this->values['complete_till'] = strtotime($date); 
-        }
+        $this->values['complete_till'] = strtotime($date); 
         return $this;
-    }
+    }*/
 
     /**
      * Список задач
