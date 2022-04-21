@@ -36,6 +36,10 @@ class Note extends AbstractModel
         'text',
         'responsible_user_id',
         'created_user_id',
+        'order',
+        'entity_id',
+        'created_by',
+        'params'
     ];
 
     /**
@@ -112,12 +116,39 @@ class Note extends AbstractModel
 
         return isset($response['notes']) ? $response['notes'] : [];
     }
-    public function apiv4List($entity, $parameters, $modified = null)
+    /**
+     * Список примечаний по типу сущности, метод в4
+     *
+     * Метод позволяет получить примечания по типу сущности с возможностью фильтрации и постраничной выборки.
+     * Ограничение по возвращаемым на одной странице (offset) данным - 250 примечаний.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#notes-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($entity, $parameters = [])
     {
-        $response = $this->getRequest('/api/v4/'.$entity.'/notes', $parameters, $modified);
+        $response = $this->getRequest('/api/v4/'.$entity.'/notes', $parameters);
 
         return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
     }
+
+    /**
+     * Список примечаний по конкретной сущности, по ID сущности, метод в4
+     *
+     * Метод позволяет получить примечания по ID родительской сущности.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#notes-entity-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($entity_type, $entity_id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/'.$entity_type.'/'.$entity_id.'/notes', $parameters);
+
+        return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
+    }
+
     /**
      * Добавление примечания
      *
@@ -157,6 +188,36 @@ class Note extends AbstractModel
     }
 
     /**
+     * Добавление примечаний, метод в4
+     *
+     * Метод позволяет добавлять примечания
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#notes-add
+     * @param string $notes Массив примечаний на добавление
+     * @throws \AmoCRM\Exception
+     */
+    public function apiv4Add($entity_type, $entity_id, $notes = [])
+    {
+        $parameters = [];
+
+        if (empty($notes))
+        {
+            $notes = [$this];
+        }
+
+        foreach ($notes AS $note) 
+        {
+            $updated_values = $note->getValues();
+
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->postv4Request('/api/v4/'.$entity_type.'/'.$entity_id.'/notes', $parameters);
+
+        return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
+    }
+
+    /**
      * Обновление примечания
      *
      * Метод позволяет обновлять данные по уже существующим примечаниям
@@ -187,23 +248,33 @@ class Note extends AbstractModel
 
         return empty($response['notes']['update']['errors']);
     }
-    public function apiv4Update(array $notes, $modified = 'now')
+
+    /**
+     * Редактирование примечаний, метод в4
+     *
+     * Метод позволяет редактировать примечания
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/events-and-notes#notes-edit
+     * @param string $notes Массив примечаний на обновление
+     * @throws \AmoCRM\Exception
+     */
+    public function apiv4Update($entity_type, $entity_id, $notes = [])
     {
         $parameters = [];
+
+        if (empty($notes))
+        {
+            $notes = [$this];
+        }
 
         foreach ($notes AS $note) 
         {
             $updated_values = $note->getValues();
 
-            $id = (int)$updated_values['id'];
-
-            $this->checkId($id);
-
-            $updated_values['last_modified'] = strtotime($modified);
             $parameters[] = $updated_values; 
         }
 
-        $response = $this->patchRequest('/api/v4/notes', $parameters, $modified);
+        $response = $this->patchRequest('/api/v4/'.$entity_type.'/'.$entity_id.'/notes', $parameters);
 
         return isset($response['_embedded']['notes']) ? $response['_embedded']['notes'] : [];
     }
