@@ -84,7 +84,7 @@ class Event extends AbstractModel
      * @param array $parameters Массив параметров к amoCRM API
      * @return array Ответ amoCRM API
      */
-    public function apiTypes($parameters)
+    public function apiTypes($parameters = [])
     {
         $response = $this->getRequest('/api/v4/events/types', $parameters);
 
