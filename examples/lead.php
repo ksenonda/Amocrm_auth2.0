@@ -42,6 +42,10 @@ try
     //создаем обьект контакта со всеми необходимыми полями
     $contact = $amo->contact;
     $contact['name'] = 'Тестовый через комплекс';
+    // если необходимо добавить кастомные поля в контакт (или компанию) этим методом, необходимо добавить конструкцию
+    $contact->addv4CustomField(1129447, $phone); 
+    $fields = $contact->getValues();
+    $contact['custom_fields_values'] = $contact->handleCustomFields($fields['custom_fields_values']);
     //создаем обьект компании со всеми необходимыми полями
     $company = $amo->company;
     $company['name'] = 'Тестовая  через комплекс';
