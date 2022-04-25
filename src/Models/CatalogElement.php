@@ -45,6 +45,34 @@ class CatalogElement extends AbstractModel
     }
 
     /**
+     * Доступные элементы списка, метод в4
+     *
+     * Метод позволяет получить доступные элементы списка
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#list-elements-list
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($catalog_id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/catalogs/'.$catalog_id.'/elements', $parameters);
+
+        return isset($response['_embedded']['elements']) ? $response['_embedded']['elements'] : [];
+    }
+
+    /**
+     * Получение элемента списка по ID, метод в4
+     *
+     * Метод позволяет получить элемент списка по его ID
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#list-elements-detail
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($catalog_id, $element_id, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/catalogs/'.$catalog_id.'/elements/'.$element_id, $parameters);
+
+        return isset($response) ? $response : [];
+    }
+
+    /**
      * Добавление элементов каталога
      *
      * Метод позволяет добавлять элементы каталога по одному или пакетно
@@ -82,12 +110,36 @@ class CatalogElement extends AbstractModel
         return count($elements) == 1 ? array_shift($result) : $result;
     }
 
-    public function apiv4Add($catalog_id)
+    /**
+     * Добавление элементов списков, метод в4
+     *
+     * Метод позволяет добавлять элементы списков в аккаунт
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#list-elements-add
+     * @param array $elements Массив элементов для пакетного добавления
+     * @return array Массив данных по элементу(элементам)
+     */
+    public function apiv4Add($catalog_id, $elements = [])
     {
-        $params = [];
-        $params[] = $this->getValues();
+        if (empty($elements))
+        {
+            $elements = [$this];
+        }
 
-        $response = $this->postv4Request('/api/v4/catalogs/'.$catalog_id.'/elements', $params);
+        $parameters = [];
+
+        foreach ($elements AS $element) 
+        {
+            $values = $element->getValues();
+
+            if (isset($values['custom_fields_values']))
+            {
+                $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
+            }
+            $parameters[] = $values;
+        }
+
+        $response = $this->postv4Request('/api/v4/catalogs/'.$catalog_id.'/elements', $parameters);
 
         return isset($response['_embedded']['elements']) ? $response['_embedded']['elements'] : [];
     }
@@ -124,6 +176,41 @@ class CatalogElement extends AbstractModel
         }
 
         return empty($response['catalog_elements']['update']['errors']);
+    }
+
+    /**
+     * Редактирование элементов списков, метод в4
+     *
+     * Метод позволяет редактировать элементы списков
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/catalogs-api#list-elements-edit
+     * @param array $elements Массив элементов для пакетного добавления
+     * @return array Массив данных по элементу(элементам)
+     */
+    public function apiv4Update($catalog_id, $elements = [])
+    {
+        if (empty($elements))
+        {
+            $elements = [$this];
+        }
+        
+        $parameters = [];
+
+        foreach ($elements as $element) 
+        {
+            $updated_values = $element->getValues();
+
+            if (isset($updated_values['custom_fields_values']))
+            {
+                $updated_values['custom_fields_values'] = $this->handleCustomFields($updated_values['custom_fields_values']);
+            }
+
+            $parameters[] = $updated_values; 
+        }
+
+        $response = $this->patchRequest('/api/v4/catalogs/'.$catalog_id.'/elements', $parameters);
+
+        return isset($response['_embedded']['elements']) ? $response['_embedded']['elements'] : [];
     }
 
     /**
