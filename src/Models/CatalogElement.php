@@ -23,6 +23,7 @@ class CatalogElement extends AbstractModel
     protected $fields = [
         'catalog_id',
         'name',
+        'id',
         'request_id',
         'custom_fields_values'
     ];
