@@ -1,8 +1,60 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+/**
+*
+* Примеры версии в4
+*
+*/
 
-try {
+try 
+{
+    $amo = new \AmoCRM2\Client($account_link, $token);
+
+    // Связи между сущностями
+    // Метод для получения связей между сущностями аккаунта
+    $links = $amo->links->apiv4List('leads', 24449959);
+    $links = $amo->links->apiv4List('leads', 24449959, 
+    [
+      'filter[to_entity_id]' => 88691907, 
+      'filter[to_entity_type]' => 'companies', 
+      'filter[to_catalog_id]' => 7190, 
+    ]);
+
+    // привязка сущностей
+    $link = $amo->links;
+    $link['from'] = 'leads';
+    $link['from_id'] = 24449959;
+    $link['to'] = 'catalog_elements';
+    $link['to_id'] = 123345;
+    $link['catalog_id'] = 4849;
+    $link['quantity'] = 1;
+    $res = $link->apiv4Link();
+
+    // отвязка сущностей
+    $link = $amo->links;
+    $link['from'] = 'leads';
+    $link['from_id'] = 24449959;
+    $link['to'] = 'catalog_elements';
+    $link['to_id'] = 123345;
+    $link['catalog_id'] = 4849;
+    $res = $link->apiv4Unlink();
+
+    
+
+} 
+catch (\AmoCRM2\Exception $e) 
+{
+    printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
+}
+
+/**
+*
+* Примеры версии в2
+*
+*/
+try 
+{
     $amo = new \AmoCRM2\Client($account_link, $token);
 
     // Связи между сущностями
@@ -59,6 +111,8 @@ try {
     $link['to_id'] = 3673249;
     var_dump($link->apiUnlink());
 
-} catch (\AmoCRM2\Exception $e) {
+} 
+catch (\AmoCRM2\Exception $e) 
+{
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
