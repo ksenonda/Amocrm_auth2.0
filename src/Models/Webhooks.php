@@ -227,8 +227,9 @@ class Webhooks extends AbstractModel
      * @return array Ответ amoCRM API
      * @throws \AmoCRM\Exception
      */
-    public function apiv4Unsubscribe()
+    public function apiv4Unsubscribe($url)
     {
+        $parameters = ['destination' => $url];
         $response = $this->deletev4Request('/api/v4/webhooks', $parameters);
 
         return isset($response) ? $response : [];
