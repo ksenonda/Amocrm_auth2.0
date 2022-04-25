@@ -1,8 +1,60 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+/**
+*
+* Примеры версии в4
+*
+*/
 
-try {
+try 
+{
+    $amo = new \AmoCRM2\Client($account_link, $token); 
+
+    // Список элементов каталога
+    // Метод для получения элементов каталога аккаунта.
+
+    $elements = $amo->catalog_element->apiv4List(7163);
+    $elements = $amo->catalog_element->apiv4List(7163,
+        [
+            'query' => 'виджет', // поисковый запрос
+            'with' => ['invoice_link'], // доп параметры
+            'limit' => 250, // кол-во шт на странице
+            'page' => 1, // номер страницы
+            'filter[id]' => '...'|[],
+        ]);
+
+    // элемент каталога по id
+    $element = $amo->catalog_element->apiv4One(7163, 1908721);
+    $element = $amo->catalog_element->apiv4One(7163, 1908721, 'with' => ['invoice_link']);
+
+    // добавление элемента
+    $element = $amo->catalog_element;
+    $element['name'] = 'Тестовый элемент списка';
+    $element->addv4CustomField(630431, 10); // кастомные поля добавляются через общий метод
+    $result = $element->apiv4Add(7163);
+
+    // изменение элемента
+    $element = $amo->catalog_element;
+    $element['id'] = 1909035;
+    $element['name'] = 'Тестовый элемент списка';
+    $element->addv4CustomField(630429, 'тест описания');
+    $result = $element->apiv4Update(7163);
+
+    
+
+} catch (\AmoCRM2\Exception $e) 
+{
+    printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
+}
+
+/**
+*
+* Примеры версии в2
+*
+*/
+try 
+{
     $amo = new \AmoCRM2\Client($account_link, $token); 
 
     // Список элементов каталога
@@ -46,6 +98,7 @@ try {
     // Удаление каталогов
     $amo->catalog_element->apiDelete((int)$id);
 
-} catch (\AmoCRM2\Exception $e) {
+} catch (\AmoCRM2\Exception $e) 
+{
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
