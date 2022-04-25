@@ -37,7 +37,7 @@ try
     // изменение элемента
     $element = $amo->catalog_element;
     $element['id'] = 1909035;
-    $element['name'] = 'Тестовый элемент списка';
+    $element['name'] = 'Тестовый элемент списка'; // обязательное поле, даже если не меняется
     $element->addv4CustomField(630429, 'тест описания');
     $result = $element->apiv4Update(7163);
 
