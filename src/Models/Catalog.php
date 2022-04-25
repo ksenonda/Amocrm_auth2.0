@@ -22,6 +22,7 @@ class Catalog extends AbstractModel
      */
     protected $fields = [
         'name',
+        'id',
         'request_id',
         'type',
         'sort',
