@@ -2,7 +2,66 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-try {
+/**
+*
+* Примеры версии в4
+*
+*/
+
+try 
+{
+    $amo = new \AmoCRM2\Client($account_link, $token); 
+
+    // Список примечаний
+    $notes = $amo->note->apiv4List('leads', 
+        [
+            'limit' => 250, // кол-во шт на странице
+            'page' => 1, // номер страницы
+            'filter[id]' => 40206119, // id примечания - можно массив из id
+            'filter[entity_id]' => [6730231], // id сущности
+            'filter[note_type]' => 'common', // тип примечания можно []
+            'filter[updated_at][from]' => 1549870000, // изменено с - по
+            'filter[updated_at][to]' => 1549874640,
+            'order[updated_at|id]' => 'asc|desc', //сортировка доступна по 2 типам полей updated_at или id и по 2 значениям asc или desc
+        ]);
+
+    // Список примечаний по id 1 сущности
+    $notes = $amo->note->apiv4One('leads', 6730231, 
+        [
+            'filter[id]' => 40206119, 
+            'filter[note_type]' => 'common', 
+            'filter[updated_at][from]' => 1549870000, 
+            'filter[updated_at][to]' => 1549874640, 
+            'order[updated_at|id]' => 'asc|desc'
+        ]);
+
+    // добавление примечания
+    $note = $amo->note;
+    $note['note_type'] = 'common';
+    $note['params'] = ['text' => $comment];
+    $note->apiv4Add('leads', (int)$lead_id);
+
+    // редактирование примечания
+    $note = $amo->note;
+    $note['note_type'] = 'common';
+    $note['params'] = ['text' => $comment];
+    $note->apiv4Update('leads', (int)$lead_id); 
+
+} 
+catch (\AmoCRM2\Exception $e) 
+{
+    printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
+}
+
+
+/**
+*
+* Примеры версии в2
+*
+*/
+
+try 
+{
     $amo = new \AmoCRM2\Client($account_link, $token); 
 
     // Список примечаний
@@ -72,6 +131,8 @@ try {
 
     $result = $amo->note->apiv4Update([$note1, $note2]);
 
-} catch (\AmoCRM2\Exception $e) {
+} 
+catch (\AmoCRM2\Exception $e) 
+{
     printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
 }
