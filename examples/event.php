@@ -49,6 +49,13 @@ try
         'filter[value_after]' => '...'/[],//(string|array) - все что актуально для value_before
     ]);
 
+    //получение конкретного события
+    $event = $amo->lead->apiv4One(123456);
+
+    //Получение типов событий
+    $event_types = $amo->lead->apiTypes();
+    $event_types = $amo->lead->apiTypes(['language_code' => 'en']); //получение событий на англ
+
 
 
 } catch (\AmoCRM2\Exception $e) {
