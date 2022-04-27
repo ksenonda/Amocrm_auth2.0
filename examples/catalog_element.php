@@ -31,14 +31,14 @@ try
     // добавление элемента
     $element = $amo->catalog_element;
     $element['name'] = 'Тестовый элемент списка';
-    $element->addv4CustomField(630431, 10); // кастомные поля добавляются через общий метод
+    //$element->addv4CustomField(630431, 10); // кастомные поля добавляются через общий метод - пока недоступно, поля подавать полным массивом
     $result = $element->apiv4Add(7163);
 
     // изменение элемента
     $element = $amo->catalog_element;
     $element['id'] = 1909035;
     $element['name'] = 'Тестовый элемент списка'; // обязательное поле, даже если не меняется
-    $element->addv4CustomField(630429, 'тест описания');
+    //$element->addv4CustomField(630429, 'тест описания');
     $result = $element->apiv4Update(7163);
 
     
