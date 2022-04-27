@@ -133,10 +133,10 @@ class CatalogElement extends AbstractModel
         {
             $values = $element->getValues();
 
-            if (isset($values['custom_fields_values']))
+            /*if (isset($values['custom_fields_values']))
             {
                 $values['custom_fields_values'] = $this->handleCustomFields($values['custom_fields_values']);
-            }
+            }*/
             $parameters[] = $values;
         }
 
