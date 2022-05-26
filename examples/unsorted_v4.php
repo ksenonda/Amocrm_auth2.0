@@ -51,8 +51,9 @@ try
     $unsorted['created_at'] = $timestamp; // необязательный параметр
     $unsorted['metadata'] = 
     [
-        'from' => $caller_phone, //От кого сделан звонок
-        'phone' => $callee_phone, // Кому сделан звонок
+        'uniq' => $uniq, // уникальный id звонка 
+        'from' => $caller_phone, //От кого сделан звонок - имя
+        'phone' => $callee_phone, // От кого сделан звонок - телефон
         'called_at' => $timestamp, //Когда сделан звонок в формате Unix Timestamp
         'duration' => $duration, //Сколько длился звонок
         'link' => $link, //Ссылка на запись звонка
