@@ -90,7 +90,7 @@ class Unsorted extends AbstractModel
      */
     public function apiv4List($parameters = [])
     {
-        $response = $this->getRequest('/api/v4/leads/unsorted/', $parameters);
+        $response = $this->getRequest('/api/v4/leads/unsorted', $parameters);
 
         return isset($response['_embedded']['unsorted']) ? $response['_embedded']['unsorted'] : [];
     }
