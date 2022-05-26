@@ -32,10 +32,18 @@ class Unsorted extends AbstractModel
     protected $fields = [
         'source',
         'source_uid',
+        'source_name',
         'source_data',
         'date_create',
+        'created_at',
         'pipeline_id',
         'data',
+        'user_id',
+        'status_id',
+        'link',
+        'metadata',
+        '_embedded',
+        'request_id'
     ];
 
     /**
@@ -71,6 +79,40 @@ class Unsorted extends AbstractModel
     }
 
     /**
+     * Список неразобранных заявок, метод в4
+     *
+     * Метод для получения списка неразобранных заявок с возможностью фильтрации и постраничной выборки.
+     * Ограничение по возвращаемым на одной странице (offset) данным - 250 заявок.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-list
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4List($parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/leads/unsorted/', $parameters);
+
+        return isset($response['_embedded']['unsorted']) ? $response['_embedded']['unsorted'] : [];
+    }
+
+    /**
+     * Получение неразобранной сделки по uid, метод в4
+     *
+     * Метод позволяет получить данные конкретной неразобранной сделки по UID
+     * 
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-detail
+     * @param array $parameters Массив параметров к amoCRM API
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4One($uid, $parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/leads/unsorted/'.$uid, $parameters);
+
+        return isset($response) ? $response : [];
+    }
+
+    /**
      * Агрегирование неразобранных заявок
      *
      * Метод для получения агрегированной информации о неразобранных заявках.
@@ -83,6 +125,21 @@ class Unsorted extends AbstractModel
         $response = $this->getRequest('/api/unsorted/get_all_summary/');
 
         return isset($response['category']) ? $response : [];
+    }
+
+    /**
+     * Сводная информация о неразобранных сделках, метод в4
+     *
+     * Метод для получения агрегированной информации о неразобранных заявках.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-summary
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4GetAllSummary($parameters = [])
+    {
+        $response = $this->getRequest('/api/v4/leads/unsorted/summary', $parameters);
+
+        return isset($response) ? $response : [];
     }
 
     /**
@@ -128,6 +185,26 @@ class Unsorted extends AbstractModel
     }
 
     /**
+     * Принятие неразобранных заявок, метод в4
+     *
+     * Метод для принятия неразобранных заявок.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-accept
+     * @param string $uid
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Accept($uid)
+    {
+        $parameters = [];
+
+        $parameters[] = $this->getValues();
+        
+        $response = $this->postv4Request('/api/v4/leads/unsorted/'.$uid.'/accept', $parameters);
+
+        return isset($response['_embedded']) ? $response['_embedded'] : [];
+    }
+
+    /**
      * Отклонение неразобранных заявок
      *
      * Метод для отклонения неразобранных заявок.
@@ -162,6 +239,75 @@ class Unsorted extends AbstractModel
         }
 
         return count($uids) == 1 ? array_shift($result) : $result;
+    }
+
+    /**
+     * Отклонение неразобранных заявок, метод в4
+     *
+     * Метод для отклонения неразобранных заявок.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-decline
+     * @param string $uid
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Decline($uid)
+    {
+        $parameters = [];
+
+        $parameters[] = $this->getValues();
+        
+        $response = $this->deletev4Request('/api/v4/leads/unsorted/'.$uid.'/decline', $parameters);
+
+        return isset($response['_embedded']) ? $response['_embedded'] : [];
+    }
+
+    /**
+     * Привязка неразобранного, метод в4
+     *
+     * Метод позволяет принимать неразобранное.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-link
+     * @param string $uid
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Link($uid)
+    {
+        $parameters = [];
+
+        $parameters[] = $this->getValues();
+        
+        $response = $this->postv4Request('/api/v4/leads/unsorted/'.$uid.'/link', $parameters);
+
+        return isset($response['_embedded']) ? $response['_embedded'] : [];
+    }
+
+    /**
+     * Добавление неразобранного типа звонок или форма, метод в4
+     *
+     * Метод позволяет добавлять неразобранное в аккаунт пакетно.
+     *
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-add-sip
+     * @link https://www.amocrm.ru/developers/content/crm_platform/unsorted-api#unsorted-add-form
+     * @param string $uid
+     * @return array Ответ amoCRM API
+     */
+    public function apiv4Add($unsorted_type, $unsorted = [])
+    {
+        if (empty($unsorted)) 
+        {
+            $unsorted = [$this];
+        }
+
+        $parameters = [];
+
+        foreach ($unsorted as $unsorted_lead) 
+        {
+            $parameters[] = $unsorted_lead->getValues();
+        }
+        
+        $response = $this->postv4Request('/api/v4/leads/unsorted/'.$unsorted_type, $parameters);
+
+        return isset($response['_embedded']['unsorted']) ? $response['_embedded']['unsorted'] : [];
     }
 
     /**
