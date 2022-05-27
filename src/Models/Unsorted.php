@@ -195,9 +195,7 @@ class Unsorted extends AbstractModel
      */
     public function apiv4Accept($uid)
     {
-        $parameters = [];
-
-        $parameters[] = $this->getValues();
+        $parameters = $this->getValues();
         
         $response = $this->postv4Request('/api/v4/leads/unsorted/'.$uid.'/accept', $parameters);
 
@@ -252,9 +250,7 @@ class Unsorted extends AbstractModel
      */
     public function apiv4Decline($uid)
     {
-        $parameters = [];
-
-        $parameters[] = $this->getValues();
+        $parameters = $this->getValues();
         
         $response = $this->deletev4Request('/api/v4/leads/unsorted/'.$uid.'/decline', $parameters);
 
@@ -272,9 +268,7 @@ class Unsorted extends AbstractModel
      */
     public function apiv4Link($uid)
     {
-        $parameters = [];
-
-        $parameters[] = $this->getValues();
+        $parameters = $this->getValues();
         
         $response = $this->postv4Request('/api/v4/leads/unsorted/'.$uid.'/link', $parameters);
 
