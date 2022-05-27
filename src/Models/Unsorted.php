@@ -434,4 +434,28 @@ class Unsorted extends AbstractModel
     {
         return $this->addData('contacts', $values);
     }
+
+
+    /**
+     * Привязка доп сущностей при добавлении неразобранного, доп функция
+     *
+     * @return $this
+     */
+    public function addEntities($contact = null, $company = null, $lead = null)
+    {
+        if (!empty($contact))
+        {
+            $this->values['_embedded']['contacts'][] = $contact->getValues();
+        }
+        if (!empty($company))
+        {
+            $this->values['_embedded']['companies'][] = $company->getValues();
+        }
+        if (!empty($lead))
+        {
+            $this->values['_embedded']['leads'][] = $lead->getValues();
+        }
+
+        return $this;
+    }
 }
