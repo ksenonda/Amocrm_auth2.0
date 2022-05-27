@@ -30,17 +30,17 @@ try
 
     //создаем обьект контакта со всеми необходимыми полями
     $contact = $amo->contact;
-    $contact['name'] = 'Тестовый через комплекс';
+    $contact['name'] = 'Тестовый контакт';
     // если необходимо добавить кастомные поля в контакт (компанию или сделку) этим методом, необходимо добавить конструкцию
     $contact->addv4CustomField(1129447, $phone); 
     $fields = $contact->getValues();
     $contact['custom_fields_values'] = $contact->handleCustomFields($fields['custom_fields_values']);
     //создаем обьект компании со всеми необходимыми полями
     $company = $amo->company;
-    $company['name'] = 'Тестовая  через комплекс';
+    $company['name'] = 'Тестовая компания';
     //создаем обьект сделки со всеми необходимыми полями
     $lead = $amo->lead;
-    $lead['name'] = 'Тестовая сделка через в4 комплекс';
+    $lead['name'] = 'Тестовая сделка';
     $lead['status_id'] = 28525342;
     $lead['price'] = 1;
     // тип звонок
@@ -60,7 +60,7 @@ try
         'service_code' => $service_code, //Код сервиса, через который сделан звонок
         'is_call_event_needed' => true, //В случае передачи значения true, в карточку будет добавлено событие о входящем звонке
     ];
-    $unsorted['_embedded'] = ['contacts' => [$contact], 'companies' => [$company], 'leads' => [$lead]]; // допускается только по 1 сущности каждого вида
+    $unsorted->addEntities($contact, $company, $lead); // допускается только по 1 сущности каждого вида 
     $unsorted['request_id'] = $request_id; // необязательный параметр
     $result = $unsorted->apiv4Add('sip');
 
